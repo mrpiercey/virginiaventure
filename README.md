@@ -4,6 +4,10 @@ A decision game about the first years of Jamestown, 1607 to 1612, for 5th grade 
 
 Students lead the colony through ten decisions. After each one they see what their choice did, what they gave up (the opportunity cost), and what the real settlers did. At the end they get a report they can copy into a doc.
 
+- **Check the Charter.** Every decision has a Check the Charter button. It opens the real passage from the King's charter (April 1606) or the Virginia Company's instructions (November 1606) that speaks to that decision, with the key words highlighted and a plain-words version underneath.
+- **Real evidence.** After each decision, students can open the primary sources behind it in a pop-up: the real words, a plain-words version, a question to think about, and a link to the full source. There are 16 sources in all, including John Smith's map and the 1616 portrait of Pocahontas.
+- **You and the real Jamestown.** The final report puts each of the student's choices beside what the real settlers did, and charts how many of their people lived next to the real numbers.
+
 ## How to play
 
 Open `index.html` in any web browser. There is nothing to install and no login.
@@ -22,7 +26,11 @@ Open `index.html` in any web browser. There is nothing to install and no login.
 
 The places, dates, numbers, and events are real. The advisors' words were written for the game, based on what those people said or did. The player is a made-up leader. The real colony had several leaders, and their choices are described after each decision.
 
-All of the pictures are original drawings made in code for this game. No art, text, or code was copied from any other game.
+The scene pictures are original drawings made in code for this game. No art, text, or code was copied from any other game.
+
+Every quotation in the pop-ups was copied from the page it links to. The three historical images in the `sources` folder (John Smith's map of Virginia, the 1616 engraving of Pocahontas, and John Smith's map of New England) are public domain scans from Wikimedia Commons.
+
+Some sources use old spellings and unfair words for Powhatan people. Henry Spelman's full account describes violence. Preview the full sources before sending students to them.
 
 ## Look and feel
 
@@ -42,4 +50,4 @@ The game follows the Edutopia brand guidelines and shares its design system with
 5. On github.com, open the new repository. Go to **Settings**, then **Pages**. Under **Branch**, choose **main** and **/ (root)**, then click **Save**.
 6. Wait about a minute. The game will be live at `https://YOUR-USERNAME.github.io/virginiaventure/`.
 
-To update it later: replace `index.html`, then in GitHub Desktop click **Commit to main** and **Push origin**.
+To update it later: replace `index.html` (and keep the `sources` folder beside it), then in GitHub Desktop click **Commit to main** and **Push origin**.

@@ -13,7 +13,8 @@
    Blue, pill buttons, white cards with soft shadows, and the
    palette ribbon under the top bar. Electric Orange stays rare:
    one word in the title and one main button per screen.
-   Layout: one centered column. Status card, picture, decision.
+   Layout: two panels that fill the page. Picture and colony numbers
+   on the left, the story and choices on the right. One column on phones.
    ============================================================ */
 :root{
   color-scheme: light;
@@ -32,6 +33,8 @@
   --shadow-pop:0 10px 40px rgba(29,42,68,.22);
   --radius:18px;
   --r1:min(15vw,210px); --r2:min(11vw,150px); --r3:min(17vw,240px);
+  --page-w:1560px; --gutter:clamp(16px,2.6vw,40px);
+  --you:var(--edu-pacific); --real:var(--edu-salmon); /* chart colors: checked for color-blind safety */
 }
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -59,17 +62,22 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .appbar{position:relative;background:var(--edu-white);box-shadow:0 2px 12px rgba(29,42,68,.10);margin-bottom:6px}
 .appbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:6px;
   background:linear-gradient(90deg,var(--edu-pink) 0 14.3%,var(--edu-light-purple) 0 28.6%,var(--edu-pacific) 0 42.9%,var(--edu-light-teal) 0 57.2%,var(--edu-green) 0 71.5%,var(--edu-sunshine) 0 85.8%,var(--edu-tangerine) 0)}
-.appbar .in{max-width:58rem;margin-inline:auto;padding-inline:16px;padding-block:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 16px}
+.appbar .in{max-width:var(--page-w);margin-inline:auto;padding-inline:var(--gutter);padding-block:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 16px}
 .appbar .name{font-family:var(--font-slab);font-weight:700;font-size:22px;line-height:1.1}
 .appbar .when{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--tint-blue);border-radius:99px;padding:5px 14px;white-space:nowrap}
 
-.wrap{max-width:58rem;margin-inline:auto;padding-inline:16px;padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
+.wrap{max-width:var(--page-w);margin-inline:auto;padding-inline:var(--gutter);padding-block:24px 56px;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:clamp(18px,2.4vw,36px);align-items:start}
+.left{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 16px);display:flex;flex-direction:column;gap:16px;min-width:0}
+@media (max-width:900px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .left{position:static}
+}
 
 /* ---------- Status card ---------- */
-.status{display:grid;grid-template-columns:auto repeat(4,minmax(0,1fr));gap:12px 22px;align-items:end;background:var(--edu-white);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:14px 20px 16px}
-.people{display:flex;flex-direction:column;line-height:1.05;padding-right:4px}
+.status{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:12px 22px;align-items:end;background:var(--edu-white);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:14px 20px 16px}
+.people{grid-column:1 / -1;display:flex;flex-direction:row;align-items:baseline;gap:8px;line-height:1.05}
 .people b{font-family:var(--font-ui);font-weight:800;font-size:32px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
-.people span{font-size:13px;color:var(--edu-light-grey)}
+.people span{font-size:14px;color:var(--edu-light-grey)}
 .meter{min-width:0}
 .meter .top{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:14px;margin-bottom:4px}
 .meter .top b{font-weight:700}
@@ -82,10 +90,6 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .meter[data-k="company"] .fill{background:var(--edu-purple)}
 .meter .low{display:none;font-size:12px;font-weight:700;color:var(--warn)}
 .meter.is-low .low{display:inline}
-@media (max-width:640px){
-  .status{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .people{grid-column:1 / -1;flex-direction:row;align-items:baseline;gap:8px}
-}
 
 /* ---------- Picture ---------- */
 .plate{margin:0;background:var(--edu-white);border-radius:var(--radius);box-shadow:var(--shadow-card);overflow:hidden}
@@ -93,20 +97,20 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .plate figcaption{font-size:13.5px;color:var(--edu-light-grey);padding:9px 18px 10px}
 
 /* ---------- Text blocks ---------- */
-.stage{display:flex;flex-direction:column;gap:18px}
+.stage{display:flex;flex-direction:column;gap:18px;min-width:0}
 .kicker{align-self:flex-start;font-weight:700;font-size:13px;letter-spacing:.2em;text-transform:uppercase;background:var(--edu-sunshine);padding:6px 18px;border-radius:99px}
 .round-title{font-size:clamp(30px,4.4vw,42px)}
 .hero{font-size:clamp(46px,9vw,88px);line-height:1.02;color:var(--edu-pacific)}
 .hero .hl{color:var(--edu-orange)}
 .lede{font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--edu-dark-grey);max-width:44rem}
 .prose{display:flex;flex-direction:column;gap:10px;max-width:42rem}
-.news{background:var(--tint-sun);border-radius:16px;padding:14px 20px;max-width:44rem}
+.news{background:var(--tint-sun);border-radius:16px;padding:14px 20px}
 .news b{font-family:var(--font-slab);font-weight:700;font-size:21px;display:block;margin-bottom:2px}
-.other{background:var(--tint-teal);border-radius:16px;padding:14px 20px;max-width:44rem}
+.other{background:var(--tint-teal);border-radius:16px;padding:14px 20px}
 .other b{display:block;font-family:var(--font-slab);font-weight:700;font-size:19px;color:var(--edu-space);margin-bottom:2px}
 
 /* ---------- Advisors ---------- */
-.advice{display:flex;flex-direction:column;gap:10px;max-width:44rem}
+.advice{display:flex;flex-direction:column;gap:10px}
 .advice h3{font-size:21px}
 .advice .who{display:flex;flex-wrap:wrap;gap:8px}
 .advice .who button{font-weight:700;font-size:14px;line-height:1.2;background:var(--edu-white);border:2.5px solid var(--edu-midnight);border-radius:99px;padding:8px 18px;transition:background .12s,color .12s,transform .12s}
@@ -116,7 +120,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .advice blockquote cite{display:block;font-style:normal;font-weight:400;font-size:13.5px;color:var(--edu-light-grey);margin-top:4px}
 
 /* ---------- Choices ---------- */
-.choices{display:grid;gap:12px;max-width:46rem}
+.choices{display:grid;gap:12px}
 .choice{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 16px;align-items:center;text-align:left;background:var(--edu-white);border:2.5px solid transparent;border-radius:var(--radius);box-shadow:var(--shadow-card);padding:14px 20px 14px 14px;transition:transform .12s,box-shadow .12s,border-color .12s}
 .choice:hover{transform:translateY(-2px);box-shadow:var(--shadow-pop);border-color:var(--edu-pacific)}
 .choice:active{transform:none}
@@ -127,7 +131,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .choice .more{color:var(--edu-light-grey);font-size:14.5px;line-height:1.45;align-self:start}
 
 /* ---------- Results ---------- */
-.result{background:var(--edu-white);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:24px;display:flex;flex-direction:column;gap:14px;max-width:46rem}
+.result{background:var(--edu-white);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:24px;display:flex;flex-direction:column;gap:14px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
 .chips li{border-radius:99px;padding:4px 14px;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
 .chips li.up{background:var(--tint-green)}
@@ -144,9 +148,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 
 /* ---------- Welcome ---------- */
-.welcome{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px}
-.welcome .kicker{align-self:center}
-.welcome .prose{text-align:center}
+.welcome{display:flex;flex-direction:column;align-items:flex-start;gap:18px}
 .howto{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:100%;margin:0;padding:0;list-style:none;text-align:left}
 .howto li{background:var(--edu-white);border-radius:16px;box-shadow:var(--shadow-card);padding:12px 16px 14px;font-size:14px;line-height:1.45;color:var(--edu-light-grey)}
 .howto li b{display:flex;align-items:center;gap:8px;font-size:17px;color:var(--edu-midnight)}
@@ -154,12 +156,12 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .howto li[data-k="health"] b::before{background:var(--edu-green)}
 .howto li[data-k="trust"] b::before{background:var(--edu-pacific)}
 .howto li[data-k="company"] b::before{background:var(--edu-purple)}
-@media (max-width:720px){.howto{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:1280px){.howto{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .field{display:flex;flex-direction:column;gap:6px;width:100%;max-width:22rem;text-align:left}
 .field label{font-size:14px;font-weight:700}
 .field input{font:inherit;color:var(--edu-midnight);background:var(--edu-white);border:2.5px solid var(--line);border-radius:14px;padding:10px 14px}
 .field input:focus{outline:none;border-color:var(--edu-pacific)}
-.welcome .go{align-self:center;font-size:20px;padding:14px 44px}
+.welcome .go{font-size:20px;padding:14px 44px}
 .fine{font-size:13.5px;line-height:1.55;color:var(--edu-light-grey);max-width:42rem}
 
 /* ---------- Report ---------- */
@@ -169,11 +171,6 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .bignum div{display:flex;flex-direction:column;line-height:1.1}
 .bignum b{font-family:var(--font-ui);font-weight:800;font-size:52px;letter-spacing:-.02em;color:var(--edu-pacific);font-variant-numeric:tabular-nums}
 .bignum span{font-size:14px;color:var(--edu-light-grey)}
-.tablebox{overflow-x:auto;max-width:100%;background:var(--edu-white);border-radius:var(--radius);box-shadow:var(--shadow-card)}
-table{border-collapse:collapse;width:100%;font-size:14.5px}
-th,td{padding:9px 16px;text-align:left;vertical-align:top;border-bottom:1.5px solid var(--line)}
-tbody tr:last-child td{border-bottom:0}
-th{font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--tint-blue)}
 .verdicts{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:14px;margin:0;padding:0;list-style:none}
 .verdicts li{background:var(--edu-white);border-radius:16px;box-shadow:var(--shadow-card);border-top:8px solid var(--edu-pink);padding:12px 18px 16px;font-size:15.5px}
 .verdicts li:nth-child(2){border-top-color:var(--edu-light-teal)}
@@ -186,12 +183,95 @@ th{font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercas
 .copied{font-size:14px;color:var(--edu-space);font-weight:700}
 .copybox{width:100%;min-height:9rem;font:inherit;font-size:14px;border:2.5px solid var(--line);border-radius:14px;padding:10px;background:var(--edu-white);color:var(--edu-midnight)}
 
+/* The final report uses the whole page: picture and numbers across the top, report below. */
+body.is-report .wrap{grid-template-columns:minmax(0,1fr)}
+body.is-report .left{position:static;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(18px,2.4vw,36px)}
+@media (min-width:1000px){body.is-report .cmp-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:900px){body.is-report .left{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Check the Charter, and source buttons ---------- */
+.charter-btn{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 16px;align-items:center;text-align:left;background:var(--tint-sun);border:2.5px solid transparent;border-radius:var(--radius);padding:12px 20px 12px 14px;transition:transform .12s,box-shadow .12s,border-color .12s}
+.charter-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-card);border-color:var(--edu-sunshine)}
+.charter-btn svg{grid-row:1 / span 2;width:48px;height:48px;display:block}
+.charter-btn b{font-size:18px;line-height:1.3;align-self:end}
+.charter-btn .more{color:var(--edu-dark-grey);font-size:14.5px;line-height:1.45;align-self:start}
+.evidence{display:flex;flex-direction:column;gap:8px}
+.evidence > b{font-size:14px}
+.srclist{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.srcbtn{display:inline-flex;align-items:center;gap:8px;text-align:left;font-weight:600;font-size:14.5px;line-height:1.3;background:var(--tint-blue);border:2.5px solid transparent;border-radius:99px;padding:6px 16px 6px 6px;transition:background .12s,color .12s,border-color .12s}
+.srcbtn:hover{border-color:var(--edu-pacific)}
+.tag{flex:0 0 auto;font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--edu-white);border-radius:99px;padding:3px 10px;white-space:nowrap}
+.library{display:grid;gap:14px}
+.library h4{font-family:var(--font-ui);font-size:14px;font-weight:700;margin:0 0 6px;color:var(--edu-dark-grey)}
+
+/* ---------- Pop-up ---------- */
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:calc(env(safe-area-inset-top, 0px) + 16px) 16px calc(env(safe-area-inset-bottom, 0px) + 16px);background:rgba(29,42,68,.62)}
+.sheet{position:relative;width:min(100%,54rem);max-height:100%;overflow-y:auto;background:var(--edu-white);border-radius:22px;box-shadow:var(--shadow-pop);padding:26px clamp(18px,3vw,34px) 28px}
+.sheet:focus{outline:none}
+.sheet .x{position:sticky;top:0;display:block;margin:-6px -6px -34px auto;font-weight:700;font-size:14px;background:var(--edu-white);border:2.5px solid var(--edu-midnight);border-radius:99px;padding:6px 16px;z-index:2}
+.sheet .x:hover{background:var(--edu-midnight);color:var(--edu-white)}
+.m-body{display:flex;flex-direction:column;gap:14px}
+.m-body h2{font-size:clamp(26px,3.4vw,36px);color:var(--edu-pacific)}
+.m-meta{font-size:14.5px;color:var(--edu-light-grey);line-height:1.5}
+.m-meta b{color:var(--edu-midnight)}
+.m-img{margin:0;background:var(--edu-cream);border-radius:14px;padding:10px;text-align:center}
+.m-img img{display:block;max-width:100%;max-height:62vh;width:auto;height:auto;margin-inline:auto;border-radius:6px}
+.m-img.tall img{max-height:70vh}
+.m-img figcaption{font-size:12.5px;color:var(--edu-light-grey);margin-top:6px}
+.m-label{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--edu-dark-grey);display:block;margin-bottom:4px}
+.m-quote{margin:0;background:var(--tint-sun);border-radius:16px;padding:14px 20px}
+.m-quote p{font-family:var(--font-slab);font-weight:600;font-size:clamp(18px,2vw,21px);line-height:1.45}
+.m-quote p + p{margin-top:10px}
+.m-quote mark{background:var(--edu-sunshine);color:inherit;border-radius:4px;padding:1px 3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.m-quote ul{margin:0;padding-left:1.2rem;font-family:var(--font-slab);font-weight:600;font-size:19px;line-height:1.5}
+.m-plain{background:var(--tint-green);border-radius:16px;padding:14px 20px}
+.m-look{background:var(--tint-blue);border-radius:16px;padding:14px 20px}
+.m-words{font-size:14.5px;color:var(--edu-dark-grey)}
+.m-foot{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.m-foot a{display:inline-block;font-weight:700;font-size:15px;line-height:1.2;text-decoration:none;color:var(--edu-midnight);background:var(--edu-white);border:2.5px solid var(--edu-midnight);border-radius:99px;padding:10px 22px}
+.m-foot a:hover{background:var(--edu-midnight);color:var(--edu-white)}
+.m-foot span{font-size:13px;color:var(--edu-light-grey)}
+
+/* ---------- You and the real Jamestown ---------- */
+.tallies{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+.tallies li{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;background:var(--edu-white);border-radius:99px;box-shadow:var(--shadow-card);padding:5px 16px 5px 5px}
+.sym{flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:19px;line-height:1;background:var(--tint-green)}
+.part .sym,.sym.part{background:var(--tint-sun)}
+.diff .sym,.sym.diff{background:var(--edu-white);border:2.5px solid var(--edu-midnight)}
+.cmp-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.cmp{background:var(--edu-white);border-radius:16px;box-shadow:var(--shadow-card);padding:12px 16px 14px}
+.cmp-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 12px;margin-bottom:8px}
+.cmp-head b{font-family:var(--font-slab);font-weight:700;font-size:19px}
+.cmp-head span{font-size:13px;font-weight:700;color:var(--edu-dark-grey)}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:stretch}
+.side{border-radius:12px;padding:8px 14px 10px;font-size:15px;line-height:1.4;border-left:6px solid var(--you);background:var(--tint-blue)}
+.side.real{border-left-color:var(--real);background:var(--tint-pink)}
+.side small{display:block;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--edu-dark-grey)}
+.pair .sym{align-self:center}
+@media (max-width:520px){.pair{grid-template-columns:minmax(0,1fr)}.pair .sym{justify-self:center}}
+.bars{display:grid;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:14px}
+.barcard{background:var(--edu-white);border-radius:16px;box-shadow:var(--shadow-card);padding:14px 18px 18px}
+.barcard h4{font-family:var(--font-slab);font-weight:700;font-size:20px;margin:0}
+.barcard .sub{font-size:13.5px;color:var(--edu-light-grey)}
+.barrow{margin-top:12px}
+.barrow .who{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14.5px;margin-bottom:4px}
+.barrow .who b{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.barrow .who b::before{content:"";width:12px;height:12px;border-radius:3px;background:var(--you)}
+.barrow.real .who b::before{background:var(--real)}
+.barrow .who span{color:var(--edu-dark-grey);font-variant-numeric:tabular-nums;text-align:right}
+.barrow .track{height:22px;background:var(--track);border-radius:0 4px 4px 0;overflow:hidden}
+.barrow .fill{height:100%;min-width:3px;border-radius:0 4px 4px 0;background:var(--you)}
+.barrow.real .fill{background:var(--real)}
+.barnote{font-size:13px;color:var(--edu-light-grey);margin-top:10px}
+
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media print{
   body,body.is-welcome{background:#fff}
   .go,.advice,.copybox,.noprint{display:none!important}
   .wrap{max-width:none}
-  .status,.plate,.result,.tablebox,.verdicts li{box-shadow:none;border:1px solid var(--line)}
+  .left{position:static}
+  .modal{display:none!important}
+  .status,.plate,.result,.cmp,.barcard,.verdicts li{box-shadow:none;border:1px solid var(--line)}
 }
 </style>
 </head>
@@ -201,15 +281,23 @@ th{font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercas
   <span class="when" id="when">Spring 1607</span>
 </div></header>
 <div class="wrap">
-  <section class="status" id="status" aria-label="How the colony is doing" hidden>
-    <div class="people"><b id="people">104</b><span>settlers alive</span></div>
-    <div class="meter" data-k="food"><div class="top"><b>Food</b><span><span class="low">Low </span><i>0</i></span></div><div class="track"><div class="fill"></div></div></div>
-    <div class="meter" data-k="health"><div class="top"><b>Health</b><span><span class="low">Low </span><i>0</i></span></div><div class="track"><div class="fill"></div></div></div>
-    <div class="meter" data-k="trust"><div class="top"><b>Trust</b><span><span class="low">Low </span><i>0</i></span></div><div class="track"><div class="fill"></div></div></div>
-    <div class="meter" data-k="company"><div class="top"><b>Company</b><span><span class="low">Low </span><i>0</i></span></div><div class="track"><div class="fill"></div></div></div>
-  </section>
-  <figure class="plate"><div id="art"></div><figcaption id="cap"></figcaption></figure>
+  <aside class="left" aria-label="Picture and colony numbers">
+    <figure class="plate"><div id="art"></div><figcaption id="cap"></figcaption></figure>
+    <section class="status" id="status" aria-label="How the colony is doing" hidden>
+      <div class="people"><b id="people">104</b><span>settlers alive</span></div>
+      <div class="meter" data-k="food"><div class="top"><b>Food</b><span><span class="low">Low </span><i>0</i></span></div><div class="track"><div class="fill"></div></div></div>
+      <div class="meter" data-k="health"><div class="top"><b>Health</b><span><span class="low">Low </span><i>0</i></span></div><div class="track"><div class="fill"></div></div></div>
+      <div class="meter" data-k="trust"><div class="top"><b>Trust</b><span><span class="low">Low </span><i>0</i></span></div><div class="track"><div class="fill"></div></div></div>
+      <div class="meter" data-k="company"><div class="top"><b>Company</b><span><span class="low">Low </span><i>0</i></span></div><div class="track"><div class="fill"></div></div></div>
+    </section>
+  </aside>
   <main class="stage" id="stage" aria-live="polite"></main>
+</div>
+<div class="modal" id="modal" hidden>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="m-title" tabindex="-1">
+    <button class="x" id="m-close" type="button">Close</button>
+    <div id="m-body"></div>
+  </div>
 </div>
 <script>
 /* The Virginia Venture: rules and story. No page code in this part. */
@@ -240,7 +328,7 @@ var VV = (function () {
       },
       advisors: function () {
         return [
-          { who: 'The Company’s orders', role: 'written in London in 1606', says: 'Sail far up a river so that enemy ships cannot surprise you. Do not build in a low or wet place.' },
+          { who: 'A sailor', role: 'crew of the Susan Constant', says: 'From the sandy point we would spot Spanish sails a long way off. Of course, they would spot our smoke too.' },
           { who: 'Gabriel Archer', role: 'gentleman', says: 'The high bluff has good soil and a creek. I say we build there.' },
           { who: 'Captain Newport', role: 'commander of the ships', says: 'At the island the water is deep right up to the shore. We can tie the ships to the trees and walk the cargo off.' }
         ];
@@ -516,7 +604,7 @@ var VV = (function () {
         return [
           { who: 'Captain Newport', role: 'commander of the ships', says: 'The Company did not send us here for corn. Fill my ship with that golden dirt.' },
           { who: 'John Smith', role: 'soldier', says: 'It is dirt. Load the ship with cedar wood, which we know England will buy, and get the men planting.' },
-          { who: 'A goldsmith', role: 'new settler', says: 'It glitters, I will give you that. I cannot say what it is until I test it.' }
+          { who: 'A gold refiner', role: 'new settler', says: 'It glitters, I will give you that. I cannot say what it is until I test it.' }
         ];
       },
       choices: [
@@ -715,7 +803,7 @@ var VV = (function () {
   function newState() {
     return { i: 0, food: START.food, health: START.health, trust: START.trust, company: START.company,
       settlers: START.settlers, sent: START.settlers, site: 'island', fields: false, log: [], lost: null,
-      winter: null, name: '' };
+      winter: null, firstYear: null, name: '' };
   }
 
   function seasonRate(s, weight) {
@@ -736,6 +824,7 @@ var VV = (function () {
     s.food = clamp(s.food + n.food + bonus, 0, 100);
     s.health = clamp(s.health + n.health, 0, 100);
     out.before = before;
+    if (idx === 5) s.firstYear = before;
     return out;
   }
 
@@ -811,6 +900,7 @@ var VV = (function () {
       var r = ROUNDS[e.round];
       lines.push((e.round + 1) + '. ' + r.title + ' (' + r.when + '): ' + e.label + '. In real life: ' + r.realShort + '.');
     });
+    if (VV.tally) { var t = VV.tally(s); lines.push(''); lines.push('Compared with the real settlers: ' + t.same + ' same, ' + t.part + ' partly the same, ' + t.diff + ' different.'); }
     lines.push('');
     lines.push('People: ' + v.people);
     lines.push('Peace: ' + v.peace);
@@ -821,6 +911,285 @@ var VV = (function () {
   return { WORDS: WORDS, ROUNDS: ROUNDS, NEWS: NEWS, START: START, newState: newState, choose: choose,
     applyNews: applyNews, runWinter: runWinter, winterRate: winterRate, verdicts: verdicts,
     headline: headline, reportText: reportText, companyBonus: companyBonus };
+})();
+
+/* The Virginia Venture: the real evidence. Every quote below was copied from the page it links to. */
+(function () {
+  'use strict';
+
+  var S = {
+    charter: {
+      kind: 'Charter', title: 'The First Charter of Virginia',
+      by: 'King James I of England', when: 'April 10, 1606',
+      quote: 'YIELDING therefore to Us, our Heirs and Successors, the fifth Part only of all the same Gold and Silver, and the fifteenth Part of all the same Copper',
+      plain: 'The settlers may dig for gold, silver, and copper. In return, they must give the king one fifth of the gold and silver and one fifteenth of the copper.',
+      look: 'Who gets a share of the treasure? Who already lived on this land and is not asked about any of it?',
+      url: 'https://avalon.law.yale.edu/17th_century/va01.asp', host: 'Yale Law School, The Avalon Project'
+    },
+    orders: {
+      kind: 'Orders', title: 'The Virginia Company’s instructions to the settlers',
+      by: 'The Virginia Company of London', when: 'November 1606',
+      quote: 'you shall Do your best Endeavour to find out a Safe port in the Entrance of Some navigable River making Choise of Such a one as runneth furthest into the Land.',
+      plain: 'Do your best to find a safe harbor at the mouth of a river that ships can sail on. Pick the river that runs farthest into the land.',
+      look: 'Which of the three spots on your map follows these orders best?',
+      url: 'https://encyclopediavirginia.org/primary-documents/instructions-from-the-virginia-company-of-london-to-the-first-settlers-1606/', host: 'Encyclopedia Virginia'
+    },
+    smithmap: {
+      kind: 'Map', title: 'John Smith’s map of Virginia',
+      by: 'John Smith drew it. William Hole engraved it.', when: 'First printed in 1612',
+      img: 'sources/smith-map-virginia.jpg', alt: 'An old printed map of Virginia covered with rivers, tiny trees, and town symbols. A Powhatan leader sits in a house in the top left corner.',
+      plain: 'North is on the right side of this map, not at the top. That is how the land looked to someone sailing in from England. The man in the top left corner is Wahunsenacawh in his house. The tiny house shapes and circles are Powhatan towns.',
+      look: 'Find the words “Kings howses” and “Ordinary howses” in the top right corner. Then look at how many towns are on the map. Was this land empty?',
+      url: 'https://www.loc.gov/item/73694565/', host: 'Library of Congress', credit: 'Picture: Wikimedia Commons, public domain.'
+    },
+    percyArrive: {
+      kind: 'Eyewitness', title: 'George Percy sees Virginia for the first time',
+      by: 'George Percy, an English gentleman on the first ships', when: 'About April 1607. Printed in 1625.',
+      quote: 'faire meddowes and goodly tall Trees, with such Fresh-waters running through the woods',
+      plain: 'Beautiful meadows and fine tall trees, with fresh streams running through the woods.',
+      look: 'Percy makes Virginia sound perfect. What did he not know yet?',
+      url: 'https://encyclopediavirginia.org/primary-documents/arriving-in-virginia-an-excerpt-from-observations-gathered-out-of-a-discourse-of-the-plantation-of-the-southerne-colonie-in-virginia-by-george-percy-1625/', host: 'Encyclopedia Virginia'
+    },
+    percyFort: {
+      kind: 'Eyewitness', title: 'George Percy describes the fort',
+      by: 'George Percy, an English gentleman at Jamestown', when: 'June 1607. Printed in 1625.',
+      quote: 'The fifteenth day of June, we had built and finished our Fort which was triangle wise, having three Bulwarkes at every corner like a halfe Moone',
+      plain: 'By June 15 we had finished our fort. It was shaped like a triangle, with a platform shaped like a half moon at each corner.',
+      look: 'Look at the fort in this game’s pictures. Which parts did the artist take from Percy’s words?',
+      url: 'https://encyclopediavirginia.org/primary-documents/the-dying-time-an-excerpt-from-observations-gathered-out-of-a-discourse-of-the-plantation-of-the-southerne-colonie-in-virginia-by-george-percy-1625/', host: 'Encyclopedia Virginia'
+    },
+    percyWater: {
+      kind: 'Eyewitness', title: 'George Percy describes the water',
+      by: 'George Percy, an English gentleman at Jamestown', when: 'Summer 1607. Printed in 1625.',
+      quote: 'our drinke cold water taken out of the River, which was at a floud verie salt, at a low tide full of slime and filth',
+      plain: 'Our drink was cold water taken out of the river. At high tide it was very salty. At low tide it was full of slime and filth.',
+      look: 'Percy was there and saw this himself. Does that make him easier to trust than someone writing 100 years later? Why?',
+      url: 'https://encyclopediavirginia.org/primary-documents/the-dying-time-an-excerpt-from-observations-gathered-out-of-a-discourse-of-the-plantation-of-the-southerne-colonie-in-virginia-by-george-percy-1625/', host: 'Encyclopedia Virginia'
+    },
+    residents: {
+      kind: 'List', title: 'The names and jobs of the first settlers',
+      by: 'Taken from a list the settlers printed in 1612', when: 'The people who stayed in June 1607',
+      lines: ['Brookes, John - Gentleman', 'Cassen, Thomas - Laborer', 'Brunfield, James - Boy', 'Asbie, John - died August 6, 1607'],
+      plain: 'The list names the 104 settlers and their jobs. Many are marked Gentleman. A few are marked Boy. Some have the date they died.',
+      look: 'Open the full list and count. How many gentlemen? How many laborers? Can you find even one farmer?',
+      url: 'https://www.nps.gov/jame/learn/historyculture/the-first-residents-of-jamestown.htm', host: 'National Park Service'
+    },
+    workRule: {
+      kind: 'Eyewitness', title: 'John Smith’s work rule',
+      by: 'John Smith', when: 'Printed in 1624, about a speech he gave in 1608',
+      quote: 'you must obey this now for a Law, that he that will not work shall not eat (except by sickness he be disabled).',
+      plain: 'From now on this is the law: anyone who will not work will not eat, unless he is too sick to work.',
+      look: 'Smith wrote this about himself, 16 years later. What might a person leave out, or make sound better, when the story is about them?',
+      url: 'https://history.hanover.edu/courses/excerpts/143smith-vir.html', host: 'Hanover College'
+    },
+    smithTrade: {
+      kind: 'Eyewitness', title: 'John Smith trades for food',
+      by: 'John Smith, writing about himself as “he”', when: 'Fall 1607. Printed in 1624.',
+      quote: 'then they brought him Venison, Turkeys, wild fowl, bread, and what they had, singing and dancing in sign of friendship till they departed.',
+      plain: 'Then they brought him deer meat, turkeys, wild birds, bread, and whatever else they had, singing and dancing as a sign of friendship until they left.',
+      look: 'Just before this part, Smith says he fired his guns at the people of this town. Whose side of the story do we never get to hear?',
+      url: 'https://history.hanover.edu/courses/excerpts/143smith-vir.html', host: 'Hanover College'
+    },
+    smithTwo: {
+      kind: 'Eyewitness', title: 'John Smith tells one story two ways',
+      by: 'John Smith', when: 'First in 1608. Again in 1624.',
+      quote: 'He kindly welcomed me with such good words, and great Platters of sundry Victuals, assuring me his friendship',
+      quote2: 'Pocahontas the King’s dearest daughter, when no entreaty could prevail, got his head in her Arms, and laid her own upon his to save him from death',
+      label: 'What he wrote in 1608', label2: 'What he wrote in 1624',
+      plain: 'In 1608, Smith says Wahunsenacawh welcomed him with kind words and big plates of food. In 1624, he says he was about to be killed until Pocahontas saved him. It is the same meeting.',
+      look: 'By 1624, Pocahontas was famous in England, and she had died. Why might Smith’s story have changed?',
+      url: 'https://history.hanover.edu/courses/excerpts/143smith-vir.html', host: 'Hanover College'
+    },
+    spelman: {
+      kind: 'Eyewitness', title: 'Henry Spelman tells his own story',
+      by: 'Henry Spelman, who came to Virginia at age 14', when: 'Written about 1613',
+      quote: 'Beinge in displeasuer of my frendes, and desirous to see other cuntryes, After three moneths sayle we cum with prosperus winds in sight of Virginia',
+      plain: 'My family was unhappy with me, and I wanted to see other countries. After three months of sailing, with good winds, we came in sight of Virginia.',
+      look: 'Henry spelled words the way they sounded to him. Read his sentence out loud. Henry lived in Powhatan and Patawomeck towns for more than a year. What could he tell us that John Smith could not?',
+      url: 'https://encyclopediavirginia.org/primary-documents/he-sould-me-to-him-for-a-towne-an-excerpt-from-relation-of-virginia-1609-by-henry-spelman-1613/', host: 'Encyclopedia Virginia'
+    },
+    supply1608: {
+      kind: 'List', title: 'Who came on the ship in January 1608',
+      by: 'Taken from lists John Smith printed', when: 'The settlers who arrived in January 1608',
+      lines: ['William Dawson, Abraham Ransacke, William Johnson, Richard Belfield - Refiners', 'Robert Alberton - A Perfumer', 'Peter Keffer - A Gunner'],
+      plain: 'A refiner is someone who cleans and tests gold. This ship brought four of them, along with a perfume maker.',
+      look: 'What does this list tell you about what the Company expected its settlers to find?',
+      url: 'https://www.virtualjamestown.org/census3a.html', host: 'Virtual Jamestown'
+    },
+    powhatanSpeech: {
+      kind: 'Speech', title: 'Wahunsenacawh speaks to John Smith',
+      by: 'Wahunsenacawh, as John Smith wrote it down', when: 'Spoken in the winter of 1608 to 1609. Printed in 1624.',
+      quote: 'What can you get by warre, when we can hide our provisions and fly to the woods?',
+      plain: 'What can you win by fighting, when we can hide our food and slip away into the woods?',
+      look: 'These are a Powhatan leader’s words, but an Englishman wrote them down years later. Can we be sure this is exactly what he said?',
+      url: 'https://historymatters.gmu.edu/d/5838', host: 'History Matters, George Mason University'
+    },
+    rolfe: {
+      kind: 'Letter', title: 'John Rolfe asks to marry Pocahontas',
+      by: 'John Rolfe, writing to the governor', when: '1614',
+      quote: 'for the good of this plantation, for the honour of our countrey, for the glory of God, for my owne salvation',
+      plain: 'Rolfe says he wants to marry Pocahontas for the good of the colony, for the honor of England, for the glory of God, and for the good of his own soul.',
+      look: 'Rolfe wrote a long letter. Pocahontas left no letters of her own. What would you want to ask her?',
+      url: 'https://jamestown.vcdh.virginia.edu/rolfe_letter.html', host: 'Virtual Jamestown'
+    },
+    pocahontas: {
+      kind: 'Picture', title: 'The only portrait of Pocahontas made in her lifetime',
+      by: 'Simon van de Passe, an artist in London', when: '1616',
+      img: 'sources/pocahontas-1616.jpg', alt: 'A black and white print of a young woman in a tall hat and a wide lace collar, inside an oval frame of Latin words.', tall: true,
+      plain: 'The words around the picture call her Matoaka and Rebecca. They say she is 21 years old. The words underneath say she is the wife of John Rolfe.',
+      look: 'She is wearing the clothes of a rich Englishwoman. Who do you think chose them, and why? How is this different from the way movies show her?',
+      url: 'https://npg.si.edu/blog/legends-pocahontas', host: 'National Portrait Gallery', credit: 'Picture: Wikimedia Commons, public domain.'
+    },
+    neMap: {
+      kind: 'Map', title: 'John Smith’s map of New England',
+      by: 'John Smith drew it. Simon van de Passe engraved it.', when: '1616',
+      img: 'sources/smith-map-new-england.jpg', alt: 'An old printed map of the New England coast with sailing ships, a compass, and a portrait of John Smith in the top left corner.',
+      plain: 'After Virginia, Smith explored the coast far to the north and named it New England. One spot on his map is labeled Plimouth. Four years later, the Pilgrims settled there, and they had a copy of this map.',
+      look: 'The man in the corner is John Smith. Why would a mapmaker put his own picture on his map?',
+      url: 'https://www.smithsonianmag.com/history/john-smith-coined-the-term-new-england-on-this-1616-map-180953383/', host: 'Smithsonian Magazine', credit: 'Picture: Wikimedia Commons, public domain.'
+    },
+    mayflower: {
+      kind: 'Agreement', title: 'The Mayflower Compact',
+      by: 'The Pilgrims, on their ship off Cape Cod', when: 'November 11, 1620',
+      quote: 'Having undertaken for the Glory of God, and Advancement of the Christian Faith, and the Honour of our King and Country, a Voyage to plant the first Colony in the northern Parts of Virginia',
+      plain: 'We have made this voyage for the glory of God, to spread the Christian faith, and for the honor of our king and country. We came to start the first colony in the northern part of Virginia.',
+      look: 'Go back to the Virginia charter. What does it talk about first? What do the Pilgrims talk about first?',
+      url: 'https://avalon.law.yale.edu/17th_century/mayflower.asp', host: 'Yale Law School, The Avalon Project'
+    }
+  };
+  Object.keys(S).forEach(function (id) { S[id].id = id; });
+
+  /* ---------- Check the Charter ----------
+     The settlers carried two papers: the King's charter (April 1606) and the Company's
+     "Instructions given by way of advice" (November 1606), which held the day-to-day orders.
+     Each decision shows the real passage that speaks to it. [[double brackets]] mark the highlight. */
+  var DOCS = {
+    charter: { name: 'The King’s charter', when: 'April 10, 1606', url: S.charter.url, host: S.charter.host },
+    orders: { name: 'The Company’s instructions', when: 'November 1606. These orders came with the charter.', url: S.orders.url, host: S.orders.host }
+  };
+  var CHARTER = {
+    spot: { doc: 'orders',
+      passages: [
+        'you shall Do your best Endeavour to find out a Safe port in the Entrance of Some navigable River [[making Choise of Such a one as runneth furthest into the Land.]]',
+        '[[the farther up the better]] for if you sit Down near the Entrance Except it be in Some Island that is Strong by nature An Enemy that may approach you on Even Ground may Easily pull You Out',
+        'neither must You plant in a [[low and moist place, because it will prove unhealthfull]]'
+      ],
+      plain: 'Pick a river that runs far into the land, and go a long way up it. If you settle near the river’s mouth, an enemy can push you out, unless you are on an island that is naturally strong. Do not build in a low, wet place. It will make you sick.',
+      think: 'No spot on your map follows every one of these orders. Which order matters most?' },
+    first: { doc: 'orders',
+      passages: [
+        'you Shall Do well to [[Divide your Six Score men into three parts]] whereof one forty of them you may appoint to [[fortifie and build]] of which your first work must be your Storehouse for Victual 30 Others you may imploy in [[preparing your Ground and Sowing your Corn and Roots]]',
+        'The Other forty you may imploy for two Months in [[Discovery of the River above you]]',
+        'Carrying half a Dozen pickaxes to try if they Can find any mineral.'
+      ],
+      plain: 'Split your men into three groups. One group builds the fort and the storehouse. One group clears the ground and plants corn. One group spends two months exploring up the river, with pickaxes to look for gold and other minerals.',
+      words: 'Six score means 120. Victual means food.',
+      think: 'London wanted all three jobs done at once by 120 men. You have 104. Which job can wait?' },
+    work: { doc: 'orders',
+      passages: [
+        'It Were Necessary that all Your Carpenters and Other such like Workmen about building Do first build Your Storehouse and those Other Rooms of Publick and necessary Use before any house be Set up for any private person',
+        '[[Let them all Work together first for the Company and then for private men]]'
+      ],
+      plain: 'All of your carpenters and builders should build the storehouse and the other buildings everyone needs before anyone builds a house for himself. Let them all work together for the Company first.',
+      think: 'The orders say everyone works together. They do not say what to do with men who refuse.' },
+    water: { doc: 'orders',
+      passages: [
+        '[[neither must You plant in a low and moist place, because it will prove unhealthfull]]',
+        '[[You shall Judge of the Good Air by the People]] for Some part of that Coast where the Lands are Low have their people clear Eyed and with Swollen bellies and Legs but if the naturals be Strong and Clean made it is a true sign of a wholesome Soil.'
+      ],
+      plain: 'Do not settle in a low, wet place, because it will be unhealthy. You can tell whether a place is healthy by looking at the people who live there. If they are strong and well, the land is good.',
+      words: 'Naturals is the Company’s word for the Native people.',
+      think: 'The orders say to learn from the people who already live here. Where do the Powhatan towns get their water?' },
+    corn: { doc: 'orders',
+      passages: [
+        'you must have [[Great Care not to Offend the naturals]] if You Can Eschew it and imploy Some few of your Company to [[trade with them for Corn and all Other lasting Victuals]]',
+        'and this you must Do [[before that they perceive you mean to plant among them]]'
+      ],
+      plain: 'Be very careful not to upset the people who live here, if you can avoid it. Send a few men to trade with them for corn and other food that will keep. Do this before they realize that you plan to stay.',
+      words: 'Naturals is the Company’s word for the Native people. Eschew means avoid. Victuals means food.',
+      think: 'Read the last line again. Trade before they find out you are staying. Is that honest trading?' },
+    boys: { doc: 'orders',
+      passages: [
+        'Above all things [[Do not advertize the killing of any of your men]] that the Country people may know it',
+        'you Shall Do well also [[not to Let them See or know of Your Sick men]], if you have any'
+      ],
+      plain: 'Above all, do not let the people of this country find out when any of your men are killed. Do not let them see your sick men, either.',
+      think: 'The Company wants you to keep secrets. If Namontack lives in the fort, he will see everything. Is the trade still worth it?' },
+    gold: { doc: 'charter',
+      passages: [
+        'to dig, mine, and search for all Manner of Mines of Gold, Silver, and Copper',
+        'YIELDING therefore to Us, our Heirs and Successors, [[the fifth Part only of all the same Gold and Silver]], and the fifteenth Part of all the same Copper'
+      ],
+      plain: 'The settlers may dig and search for mines of gold, silver, and copper. They must give the king one fifth of the gold and silver, and one fifteenth of the copper.',
+      think: 'The king had already decided how to split the gold. Nobody had found any yet.' },
+    dry: { doc: 'orders',
+      passages: [
+        'for [[you Cannot Carry Your Selves so towards them but they will Grow Discontented with Your habitation]]'
+      ],
+      plain: 'No matter how you behave toward them, the people who live here will grow unhappy that you have settled on their land.',
+      think: 'The Company knew from the start that the Powhatan would not want a colony here. Does that change how you see the fights over corn?' },
+    snow: { doc: 'orders',
+      passages: [
+        'to Suffer [[no man to return but by pasport from the president and Councel]] nor [[to write any Letter of any thing that may Discourage others.]]',
+        'Lastly and Cheifly the way to prosper and to Obtain Good Success is to [[make your Selves all of one mind]] for the Good of Your Country and your Own'
+      ],
+      plain: 'Let no one go home without a pass from the president and the council. Let no one write a letter that might discourage other people from coming. Most of all, the way to succeed is to be of one mind, for the good of your country and yourselves.',
+      words: 'Suffer means allow.',
+      think: 'The Company did not want bad news reaching England. How might that have hurt the 300 people who just arrived?' },
+    crop: { doc: 'charter',
+      passages: [
+        'they shall have [[all the Lands, Woods, Soil, Grounds, Havens, Ports, Rivers, Mines, Minerals, Marshes, Waters, Fishings, Commodities]], and Hereditaments, whatsoever, from the said first Seat of their Plantation and Habitation by the Space of fifty Miles'
+      ],
+      plain: 'The settlers get all of the land, woods, soil, harbors, rivers, mines, marshes, and fishing for fifty miles around their first town.',
+      words: 'Hereditaments means things that can be passed down, like land. Plantation means settlement.',
+      think: 'The king gave away land he had never seen. About 15,000 people already lived on it.' }
+  };
+  VV.DOCS = DOCS;
+
+  /* Which sources go with which decision. */
+  var BY_ROUND = {
+    spot: ['smithmap'], first: ['percyArrive', 'percyFort'], work: ['residents', 'workRule'],
+    water: ['percyWater'], corn: ['smithTrade'], boys: ['smithTwo', 'spelman'], gold: ['supply1608'],
+    dry: ['powhatanSpeech'], snow: ['spelman'], crop: ['rolfe', 'pocahontas']
+  };
+  /* What the real settlers chose. More than one letter means they did a mix. */
+  var REAL = { spot: ['b'], first: ['a', 'c'], work: ['a'], water: ['a'], corn: ['a'], boys: ['a'], gold: ['a'], dry: ['a', 'b', 'c'], snow: ['a'], crop: ['a'] };
+
+  VV.ROUNDS.forEach(function (r) {
+    r.sources = (BY_ROUND[r.id] || []).map(function (id) { return S[id]; });
+    r.realKeys = REAL[r.id];
+    r.charter = CHARTER[r.id];
+  });
+
+  VV.SOURCES = S;
+  VV.LIBRARY = [
+    { name: 'Charters and orders', ids: ['charter', 'orders'] },
+    { name: 'Maps and pictures', ids: ['smithmap', 'pocahontas', 'neMap'] },
+    { name: 'People who were there', ids: ['percyArrive', 'percyFort', 'percyWater', 'smithTrade', 'workRule', 'smithTwo', 'powhatanSpeech', 'spelman', 'rolfe'] },
+    { name: 'Lists of settlers', ids: ['residents', 'supply1608'] },
+    { name: 'After Jamestown', ids: ['mayflower'] }
+  ];
+
+  /* same = the one thing the real settlers did; part = one piece of a mix; diff = something else */
+  VV.matchKind = function (roundIndex, key) {
+    var keys = VV.ROUNDS[roundIndex].realKeys;
+    if (keys.indexOf(key) < 0) return 'diff';
+    return keys.length === 1 ? 'same' : 'part';
+  };
+  VV.tally = function (s) {
+    var t = { same: 0, part: 0, diff: 0 };
+    s.log.forEach(function (e) { t[VV.matchKind(e.round, e.key)]++; });
+    return t;
+  };
+  /* Survival, yours beside the real colony's. Real numbers are the ones historians give. */
+  VV.survival = function (s) {
+    var out = [];
+    if (s.firstYear != null) out.push({ title: 'The first eight months', sub: 'May 1607 to January 1608',
+      you: { alive: s.firstYear, of: 104 }, real: { alive: 38, of: 104, about: false } });
+    if (s.winter) out.push({ title: 'The winter of 1609 to 1610', sub: 'Fall 1609 to spring 1610',
+      you: { alive: s.winter.after, of: s.winter.before }, real: { alive: 60, of: 500, about: true } });
+    return out;
+  };
 })();
 
 /* The Virginia Venture: pictures. Every scene is drawn here in code, in the style of a hand-colored 1600s map. */
@@ -1128,9 +1497,13 @@ var ART = (function () {
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
-  var stage = $('stage'), status = $('status'), s = VV.newState(), newsShown = {};
+  var stage = $('stage'), status = $('status'), modal = $('modal'), sheet = $('sheet');
+  var s = VV.newState(), newsShown = {}, opener = null;
   var METERS = ['food', 'health', 'trust', 'company'];
   var NAMES = { food: 'Food', health: 'Health', trust: 'Trust', company: 'Company' };
+  var SYM = { same: '=', part: '≈', diff: '≠' };
+  var SYM_WORDS = { same: 'Same choice', part: 'Part of what they did', diff: 'Different choice' };
+  var SCROLL = '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="6" width="30" height="36" rx="4" fill="#fff" stroke="#1D2A44" stroke-width="2.5"/><path d="M15 15h18M15 21h18M15 27h11" stroke="#1D2A44" stroke-width="2.5" stroke-linecap="round"/><circle cx="31" cy="33" r="5.5" fill="#FF9B0D" stroke="#1D2A44" stroke-width="2.5"/></svg>';
 
   function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function paras(list) { return list.map(function (p) { return '<p>' + p + '</p>'; }).join(''); }
@@ -1148,9 +1521,85 @@ var ART = (function () {
   }
   function show(html, focusSel) {
     stage.innerHTML = html;
+    wire(stage);
     var h = stage.querySelector(focusSel || 'h2');
     if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
     try { window.scrollTo(0, 0); } catch (err) { /* nothing to do */ }
+  }
+
+  /* ---------- pop-ups ---------- */
+  function srcButtons(list) {
+    return '<ul class="srclist">' + list.map(function (src) {
+      return '<li><button class="srcbtn" type="button" data-src="' + src.id + '"><span class="tag">' + src.kind + '</span>' + src.title + '</button></li>';
+    }).join('') + '</ul>';
+  }
+  function marked(text) { return esc(text).replace(/\[\[/g, '<mark>').replace(/\]\]/g, '</mark>'); }
+  function footer(url, host) {
+    return '<div class="m-foot"><a href="' + url + '" target="_blank" rel="noopener">Open the full source</a><span>From ' + host + '. Opens in a new tab.</span></div>';
+  }
+  function sourceHtml(src) {
+    var h = '<div class="m-body"><span class="kicker">' + src.kind + '</span><h2 id="m-title">' + src.title + '</h2>' +
+      '<p class="m-meta"><b>Who made it:</b> ' + src.by + '<br><b>When:</b> ' + src.when + '</p>';
+    if (src.img) h += '<figure class="m-img' + (src.tall ? ' tall' : '') + '"><img src="' + src.img + '" alt="' + esc(src.alt) + '"><figcaption>' + (src.credit || '') + '</figcaption></figure>';
+    if (src.quote) {
+      h += '<blockquote class="m-quote"><span class="m-label">' + (src.label || 'The real words') + '</span><p>“' + esc(src.quote) + '”</p>';
+      if (src.quote2) h += '<span class="m-label" style="margin-top:12px">' + src.label2 + '</span><p>“' + esc(src.quote2) + '”</p>';
+      h += '</blockquote>';
+    }
+    if (src.lines) h += '<div class="m-quote"><span class="m-label">From the list</span><ul>' + src.lines.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ul></div>';
+    h += '<div class="m-plain"><span class="m-label">' + (src.img ? 'What you are looking at' : 'In plain words') + '</span><p>' + src.plain + '</p></div>';
+    h += '<div class="m-look"><span class="m-label">Think like a historian</span><p>' + src.look + '</p></div>';
+    return h + footer(src.url, src.host) + '</div>';
+  }
+  function charterHtml(r) {
+    var c = r.charter, d = VV.DOCS[c.doc];
+    var h = '<div class="m-body"><span class="kicker">Check the Charter</span><h2 id="m-title">What your orders say</h2>' +
+      '<p class="m-meta"><b>From:</b> ' + d.name + '<br><b>Written:</b> ' + d.when + '</p>' +
+      '<blockquote class="m-quote"><span class="m-label">The real words</span>' +
+      c.passages.map(function (p) { return '<p>“' + marked(p) + '”</p>'; }).join('') + '</blockquote>';
+    if (c.words) h += '<p class="m-words"><b>Old words:</b> ' + c.words + '</p>';
+    h += '<div class="m-plain"><span class="m-label">In plain words</span><p>' + c.plain + '</p></div>';
+    h += '<div class="m-look"><span class="m-label">Before you choose</span><p>' + c.think + '</p></div>';
+    return h + footer(d.url, d.host) + '</div>';
+  }
+  function openModal(html, from) {
+    opener = from || null;
+    $('m-body').innerHTML = html;
+    var img = $('m-body').querySelector('img');
+    if (img) img.addEventListener('error', function () { var f = img.closest('figure'); if (f) f.hidden = true; });
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    sheet.scrollTop = 0;
+    sheet.focus({ preventScroll: true });
+  }
+  function closeModal() {
+    if (modal.hidden) return;
+    modal.hidden = true;
+    document.body.style.overflow = '';
+    $('m-body').innerHTML = '';
+    if (opener && document.body.contains(opener)) opener.focus({ preventScroll: true });
+    opener = null;
+  }
+  $('m-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) {
+    if (modal.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeModal(); return; }
+    if (e.key === 'Tab') {
+      var f = sheet.querySelectorAll('button, a[href]');
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === sheet)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  function wire(root) {
+    root.querySelectorAll('[data-src]').forEach(function (b) {
+      b.addEventListener('click', function () { openModal(sourceHtml(VV.SOURCES[b.getAttribute('data-src')]), b); });
+    });
+    root.querySelectorAll('[data-charter]').forEach(function (b) {
+      b.addEventListener('click', function () { openModal(charterHtml(VV.ROUNDS[+b.getAttribute('data-charter')]), b); });
+    });
   }
 
   /* ---------- start ---------- */
@@ -1158,6 +1607,7 @@ var ART = (function () {
     s = VV.newState(); newsShown = {};
     status.hidden = true;
     document.body.classList.add('is-welcome');
+    document.body.classList.remove('is-report');
     setWhen('Spring 1607');
     setArt('title', 'The Susan Constant, the Godspeed, and the Discovery reach Virginia.');
     show(
@@ -1168,7 +1618,7 @@ var ART = (function () {
       '<div class="prose">' +
       '<p>Three small ships have just crossed the Atlantic Ocean. A business in London called the Virginia Company paid for the trip. The Company wants gold, a shortcut to Asia, and anything else it can sell.</p>' +
       '<p>This land is not empty. About 15,000 Powhatan people live here, in about 30 tribes. Their leader is Wahunsenacawh, and they call their country Tsenacommacah.</p>' +
-      '<p>The council has picked you to lead. You will make ten decisions. After each one, you will find out what the real settlers did.</p>' +
+      '<p>The council has picked you to lead. You will make ten decisions. Before each one you can check the charter and ask for advice. After each one you will find out what the real settlers did.</p>' +
       '</div>' +
       '<ul class="howto">' +
       '<li data-k="food"><b>Food</b>How full the storehouse is.</li>' +
@@ -1176,9 +1626,10 @@ var ART = (function () {
       '<li data-k="trust"><b>Trust</b>How things stand between you and the Powhatan.</li>' +
       '<li data-k="company"><b>Company</b>How happy the investors in London are.</li>' +
       '</ul>' +
+      '<div class="evidence"><b>See the real papers and map the settlers carried:</b>' + srcButtons([VV.SOURCES.charter, VV.SOURCES.orders, VV.SOURCES.smithmap]) + '</div>' +
       '<div class="field"><label for="leader">Your name (it goes on your report)</label><input id="leader" type="text" maxlength="40" autocomplete="off"></div>' +
       '<div class="row"><button class="go" id="begin" type="button">Go ashore</button></div>' +
-      '<p class="fine">How true is this game? The places, dates, and events are real. The advisors’ words were written for the game, based on what those people said or did. You play a made-up leader. The real colony had several leaders, and their choices are described after each of yours.</p>' +
+      '<p class="fine">How true is this game? The places, dates, and events are real, and so is every word in the pop-up sources. The advisors’ words were written for the game, based on what those people said or did. You play a made-up leader. The real colony had several leaders, and their choices are described after each of yours.</p>' +
       '</div>',
       'h1');
     $('begin').addEventListener('click', function () {
@@ -1205,9 +1656,11 @@ var ART = (function () {
     html += '<div class="advice"><h3>Ask for advice</h3><div class="who">' +
       adv.map(function (a, i) { return '<button type="button" data-a="' + i + '" aria-pressed="false">' + a.who + '</button>'; }).join('') +
       '</div><div id="says"></div></div>';
-    html += '<div class="choices">' + r.choices.map(function (c) {
-      return '<button class="choice" type="button" data-c="' + c.key + '"><span class="ltr" aria-hidden="true">' + c.key.toUpperCase() + '</span><b>' + c.label + '</b><span class="more">' + c.detail + '</span></button>';
-    }).join('') + '</div>';
+    html += '<div class="choices">' +
+      '<button class="charter-btn" type="button" data-charter="' + s.i + '">' + SCROLL + '<b>Check the Charter</b><span class="more">See what your orders from London say about this.</span></button>' +
+      r.choices.map(function (c) {
+        return '<button class="choice" type="button" data-c="' + c.key + '"><span class="ltr" aria-hidden="true">' + c.key.toUpperCase() + '</span><b>' + c.label + '</b><span class="more">' + c.detail + '</span></button>';
+      }).join('') + '</div>';
     show(html);
     stage.querySelectorAll('[data-a]').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -1240,7 +1693,8 @@ var ART = (function () {
       '<h2 class="round-title">You chose: ' + e.label + '</h2>' +
       '<p>' + e.text + '</p>' + chips(e) +
       '<p class="gave"><b>What you gave up:</b> ' + e.gaveUp + '</p>' +
-      '<div class="real"><h3>What really happened</h3><p>' + r.reality + '</p></div>' +
+      '<div class="real"><h3>What really happened</h3><p>' + r.reality + '</p>' +
+      (r.sources.length ? '<div class="evidence"><b>See the real evidence:</b>' + srcButtons(r.sources) + '</div>' : '') + '</div>' +
       '<p class="word"><b>Word to know: ' + r.word + '.</b> It means ' + VV.WORDS[r.word] + '. ' + r.wordNote + '</p>' +
       '<button class="go" id="next" type="button">' + nextLabel + '</button>' +
       '</div>');
@@ -1277,9 +1731,16 @@ var ART = (function () {
   }
 
   /* ---------- the report ---------- */
+  function barRow(cls, who, d) {
+    var pct = Math.round(100 * d.alive / d.of), a = d.about ? 'about ' : '';
+    var text = a + d.alive + ' of ' + a + d.of + ' lived (' + pct + '%)';
+    return '<div class="barrow ' + cls + '"><div class="who"><b>' + who + '</b><span>' + text + '</span></div>' +
+      '<div class="track" title="' + who + ': ' + text + '"><div class="fill" style="width:' + pct + '%"></div></div></div>';
+  }
   function showReport() {
     renderStatus();
-    var v = VV.verdicts(s), head = VV.headline(s), lost = !!s.lost;
+    var v = VV.verdicts(s), head = VV.headline(s), lost = !!s.lost, t = VV.tally(s), surv = VV.survival(s);
+    document.body.classList.add('is-report');
     setWhen(lost ? 'The end' : 'Looking back');
     setArt(lost ? 'winter' : 'spring', lost ? 'An empty fort.' : 'The fort, with ships coming up the river.');
     var why = s.lost === 'early'
@@ -1287,23 +1748,38 @@ var ART = (function () {
       : s.lost === 'winter'
         ? 'Too few people lived through the winter to keep the fort going. The survivors board a ship for England. This time, no fleet arrives to turn them around.'
         : '';
-    var rows = s.log.map(function (e) {
-      var r = VV.ROUNDS[e.round];
-      return '<tr><td>' + (e.round + 1) + '. ' + r.title + '</td><td>' + e.label + '</td><td>' + r.realShort + '</td></tr>';
+    var cards = s.log.map(function (e) {
+      var r = VV.ROUNDS[e.round], k = VV.matchKind(e.round, e.key);
+      return '<li class="cmp ' + k + '"><div class="cmp-head"><b>' + (e.round + 1) + '. ' + r.title + '</b><span>' + SYM_WORDS[k] + '</span></div>' +
+        '<div class="pair"><div class="side you"><small>You</small>' + e.label + '</div>' +
+        '<span class="sym" aria-hidden="true">' + SYM[k] + '</span>' +
+        '<div class="side real"><small>The real settlers</small>' + r.realShort + '</div></div></li>';
+    }).join('');
+    var bars = surv.map(function (p) {
+      return '<div class="barcard"><h4>' + p.title + '</h4><p class="sub">' + p.sub + '</p>' +
+        barRow('you', 'Your colony', p.you) + barRow('real', 'Real Jamestown', p.real) + '</div>';
+    }).join('');
+    var library = VV.LIBRARY.map(function (g) {
+      return '<div><h4>' + g.name + '</h4>' + srcButtons(g.ids.map(function (id) { return VV.SOURCES[id]; })) + '</div>';
     }).join('');
     var html =
       '<span class="kicker">Final report</span><h2 class="report-head">' + head + '</h2>' +
       '<p class="lede">Report to the Virginia Company' + (s.name ? ', from ' + esc(s.name) : '') + '</p>' +
       (why ? '<div class="prose"><p>' + why + '</p></div>' : '') +
-      '<div class="bignum"><div><b>' + s.settlers + '</b><span>of your ' + s.sent + ' settlers are alive</span></div><div><b>60</b><span>of about 500 lived in real life</span></div></div>' +
       '<ul class="verdicts"><li><b>People</b>' + v.people + '</li><li><b>Peace</b>' + v.peace + '</li><li><b>Profit</b>' + v.profit + '</li></ul>' +
-      '<h3 class="section">Your decisions</h3>' +
-      '<div class="tablebox"><table><thead><tr><th>Decision</th><th>You</th><th>The real settlers</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      (bars ? '<h3 class="section">How many people lived</h3><div class="bars">' + bars + '</div><p class="barnote">Each bar shows the share of people who lived. A longer bar is better.</p>' : '') +
+      '<h3 class="section">Your choices next to theirs</h3>' +
+      '<ul class="tallies">' +
+      '<li><span class="sym same" aria-hidden="true">=</span>' + t.same + ' the same</li>' +
+      '<li><span class="sym part" aria-hidden="true">≈</span>' + t.part + ' partly the same</li>' +
+      '<li><span class="sym diff" aria-hidden="true">≠</span>' + t.diff + ' different</li></ul>' +
+      '<ul class="cmp-list">' + cards + '</ul>' +
       '<h3 class="section">Think it over</h3>' +
       '<ol class="think">' +
       '<li>Which of your decisions helped the colony most? What was its opportunity cost?</li>' +
+      '<li>Look at the bars. Where did your colony do better or worse than the real one? Which decision made the difference?</li>' +
       '<li>Find one place where you chose collaboration and one place where you chose conflict. What happened to Trust each time?</li>' +
-      '<li>The real leaders often chose differently than you did. Pick one of their choices. Why do you think they made it?</li>' +
+      '<li>Pick one decision where the real settlers chose differently than you did. Why do you think they made that choice?</li>' +
       '</ol>' +
       '<h3 class="section">What happened next in real life</h3>' +
       '<ul class="timeline">' +
@@ -1314,6 +1790,9 @@ var ART = (function () {
       '<li><b>1620</b><span>Far to the north, the Pilgrims land at Plymouth. They came for a very different reason.</span></li>' +
       '<li><b>1622</b><span>Opechancanough leads an attack that kills about a quarter of the English settlers. Years of war follow.</span></li>' +
       '</ul>' +
+      '<h3 class="section">See the real evidence</h3>' +
+      '<p class="fine">English settlers wrote most of these 400 years ago. The spelling looks strange, so try reading it out loud. Some of their words for Powhatan people are unfair. Always ask who is telling the story.</p>' +
+      '<div class="library">' + library + '</div>' +
       '<div class="row noprint"><button class="go" id="copy" type="button">Copy my report</button><button class="go quiet" id="again" type="button">Play again</button><span class="copied" id="copied" role="status"></span></div>' +
       '<div id="copyfallback"></div>';
     show(html);
@@ -1322,7 +1801,7 @@ var ART = (function () {
       var text = VV.reportText(s);
       function fallback() {
         $('copyfallback').innerHTML = '<label for="copytext" class="fine">Select all of this text and copy it.</label><textarea class="copybox" id="copytext" readonly></textarea>';
-        var t = $('copytext'); t.value = text; t.focus(); t.select();
+        var box = $('copytext'); box.value = text; box.focus(); box.select();
       }
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
