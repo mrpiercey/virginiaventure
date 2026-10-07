@@ -159,6 +159,14 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .go.quiet:hover{background:var(--edu-midnight);color:var(--edu-white);border-color:var(--edu-midnight)}
 .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 
+/* ---------- Sound button ---------- */
+.bar-r{display:flex;align-items:center;gap:10px}
+.sound{font:inherit;font-size:13px;font-weight:700;color:var(--edu-midnight);background:var(--edu-white);border:2px solid var(--line);border-radius:99px;padding:4px 12px 4px 30px;position:relative;cursor:pointer}
+.sound::before{content:"";position:absolute;left:11px;top:50%;width:11px;height:11px;margin-top:-5.5px;border-radius:50%;background:var(--edu-green)}
+.sound[aria-pressed="false"]::before{background:var(--track)}
+.sound:hover{border-color:var(--edu-midnight)}
+@media print{.sound{display:none}}
+
 /* ---------- The movie clip ---------- */
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .plate .video{position:relative;aspect-ratio:16/9;background:var(--edu-midnight)}
@@ -310,7 +318,7 @@ body.is-report .left{position:static;display:grid;grid-template-columns:minmax(0
 <body>
 <header class="appbar"><div class="in">
   <span class="name">The Virginia Venture</span>
-  <span class="when" id="when">Spring 1607</span>
+  <span class="bar-r"><button class="sound" id="sound" type="button" aria-pressed="true">Sound on</button><span class="when" id="when">Spring 1607</span></span>
 </div></header>
 <div class="wrap">
   <aside class="left" aria-label="Picture and colony numbers">
@@ -1668,8 +1676,40 @@ var ART = (function () {
 
   function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function paras(list) { return list.map(function (p) { return '<p>' + p + '</p>'; }).join(''); }
-  function setArt(name, cap) { $('art').innerHTML = ART.draw(name); $('cap').textContent = cap; }
+  /* ---------- transitions: a soft fade and a quiet swoosh between screens ---------- */
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var soundOn = true, audio = null, touched = false;
+  try { soundOn = localStorage.getItem('vv-sound') !== 'off'; } catch (err) { /* private window */ }
+  var soundBtn = $('sound');
+  function paintSound() { soundBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false'); soundBtn.textContent = soundOn ? 'Sound on' : 'Sound off'; }
+  paintSound();
+  soundBtn.addEventListener('click', function () {
+    soundOn = !soundOn; paintSound();
+    try { localStorage.setItem('vv-sound', soundOn ? 'on' : 'off'); } catch (err) { /* nothing to do */ }
+  });
+  document.addEventListener('pointerdown', function () { touched = true; }, true);
+  document.addEventListener('keydown', function () { touched = true; }, true);
+  function swoosh() {
+    if (!soundOn || !touched) return;
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+      audio = audio || new AC(); if (audio.state === 'suspended') audio.resume();
+      var t0 = audio.currentTime, len = 0.42, buf = audio.createBuffer(1, Math.floor(audio.sampleRate * len), audio.sampleRate), d = buf.getChannelData(0);
+      for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      var src = audio.createBufferSource(); src.buffer = buf;
+      var bp = audio.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 1.1;
+      bp.frequency.setValueAtTime(450, t0); bp.frequency.exponentialRampToValueAtTime(2600, t0 + len);
+      var g = audio.createGain(); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.16, t0 + 0.12); g.gain.exponentialRampToValueAtTime(0.0001, t0 + len);
+      src.connect(bp); bp.connect(g); g.connect(audio.destination); src.start(t0); src.stop(t0 + len);
+    } catch (err) { /* sound is a nice extra, never required */ }
+  }
+  function fadeIn(el, rise) {
+    if (calm || !el.animate) return;
+    el.animate([{ opacity: 0, transform: 'translateY(' + (rise || 0) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
+  }
+  function setArt(name, cap) { $('art').innerHTML = ART.draw(name); $('cap').textContent = cap; fadeIn($('art')); }
   function setPhoto(ch) {
+    fadeIn($('art'));
     $('art').innerHTML = '<img class="photo" src="' + ch.img + '" alt="' + esc(ch.alt) + '">';
     $('cap').innerHTML = esc(ch.cap) + '<span class="credit">' + esc(ch.credit) + '</span>';
   }
@@ -1687,6 +1727,7 @@ var ART = (function () {
   function show(html, focusSel) {
     stage.innerHTML = html;
     wire(stage);
+    fadeIn(stage, 14); swoosh();
     var h = stage.querySelector(focusSel || 'h2');
     if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
     try { window.scrollTo(0, 0); } catch (err) { /* nothing to do */ }
@@ -1829,6 +1870,7 @@ var ART = (function () {
     $('art').innerHTML = '<div class="video"><iframe src="https://drive.google.com/file/d/' + CLIP_ID + '/preview" title="The opening scene of The New World" allow="autoplay; fullscreen" allowfullscreen></iframe></div>';
     $('cap').innerHTML = 'The opening scene of <i>The New World</i> (2005). Press play, then use the full-screen button.' +
       '<span class="credit">Video won’t play? <a href="' + CLIP_VIEW + '" target="_blank" rel="noopener">Open it in Google Drive</a>.</span>';
+    fadeIn($('art'));
   }
   function saveClip() {
     var n = $('c-notice'), w = $('c-wonder');
