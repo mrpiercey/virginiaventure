@@ -95,6 +95,16 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .plate{margin:0;background:var(--edu-white);border-radius:var(--radius);box-shadow:var(--shadow-card);overflow:hidden}
 .plate svg{display:block;width:100%;height:auto;max-width:100%}
 .plate figcaption{font-size:13.5px;color:var(--edu-light-grey);padding:9px 18px 10px}
+.plate .photo{display:block;width:100%;height:auto;max-height:min(68vh,640px);object-fit:contain;background:var(--edu-cream)}
+.plate figcaption .credit{display:block;font-size:12px;margin-top:3px;opacity:.85}
+.story{font-size:18px;line-height:1.65}
+.story b,.cast b{color:var(--edu-space)}
+.cast{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.cast li{background:var(--edu-white);border-radius:14px;box-shadow:var(--shadow-card);padding:10px 16px;font-size:16px;line-height:1.5}
+.dots{display:flex;gap:8px}
+.dots span{width:10px;height:10px;border-radius:50%;background:var(--track)}
+.dots span.past{background:var(--edu-light-teal)}
+.dots span.on{background:var(--edu-pacific);width:28px;border-radius:99px}
 
 /* ---------- Text blocks ---------- */
 .stage{display:flex;flex-direction:column;gap:18px;min-width:0}
@@ -1204,6 +1214,115 @@ var VV = (function () {
   };
 })();
 
+/* The Virginia Venture: the true story students read before the simulation starts.
+   It ends on the day the English sail into the river, which is where decision 1 begins.
+   About 1,400 words. Pictures are public domain. */
+(function () {
+  'use strict';
+  VV.STORY = [
+    {
+      title: 'A land called Tsenacommacah',
+      when: 'Before 1607',
+      img: 'sources/story-secotan.jpg',
+      alt: 'An old engraving of a Native town with long houses covered in mats, people dancing in a circle, and rows of corn.',
+      cap: 'Secotan, a town near Roanoke Island, drawn by John White in 1585. Its people spoke a language related to the Powhatan language and lived in a similar way. Look for the corn fields, the long houses, and the dance circle.',
+      credit: 'Engraving by Theodor de Bry. Library of Congress.',
+      paras: [
+        'Long before any English ship arrived, the land around the Chesapeake Bay already had a name. The people who lived there called it <b>Tsenacommacah</b>.',
+        'About 15,000 people lived in Tsenacommacah, in more than 30 tribes. Each tribe had its own towns and its own leader, called a werowance. Above all of them was one powerful leader named <b>Wahunsenacawh</b>. The English would later call him Powhatan, which was the name of the town where he grew up. Each tribe sent him a share of its corn, deer skins, and copper.',
+        'Families lived in long houses called yehakins. They were made of bent young trees covered with woven mats or tree bark. Women planted corn, beans, and squash in big fields beside the towns. Men hunted deer, fished from canoes they carved out of whole logs, and protected their people. Children learned by helping. Boys practiced with bows and arrows for hours, and girls learned to farm, cook, and make mats and baskets.',
+        'The rivers were their roads. Canoes carried food, news, and goods for trading from town to town. Wahunsenacawh’s capital, Werowocomoco, sat beside one of those rivers.',
+        'This land was not an empty wilderness. It was home to thousands of people.'
+      ]
+    },
+    {
+      title: 'A race for riches',
+      when: '1492 to 1571',
+      img: 'sources/story-white-map.jpg',
+      alt: 'An old map of a coast with islands, rivers, sailing ships, and a compass. North is on the right.',
+      cap: 'The coast the English named Virginia, on a map printed in 1590. North is on the right side, so the land is at the top and the ocean is at the bottom.',
+      credit: 'Map by John White, engraved by Theodor de Bry. Library of Congress.',
+      paras: [
+        'In 1492, Christopher Columbus sailed for Spain and reached islands in the Caribbean Sea. Within 100 years, Spain ruled a huge empire in Mexico, Central America, and South America. Spanish ships carried home so much gold and silver that Spain became the richest country in Europe.',
+        'England was jealous. Queen <b>Elizabeth I</b> wanted colonies and treasure too. English sea captains such as <b>Francis Drake</b> attacked Spanish treasure ships and stole their gold.',
+        'The Spanish had even visited the Chesapeake Bay. In 1561, a Spanish ship carried a teenager named <b>Paquiquineo</b> far away from his home there. He lived in Spain and Mexico for about ten years. He learned Spanish, became a Christian, and took the name Don Luis.',
+        'In 1570, Paquiquineo came home with a small group of Spanish priests who wanted to build a mission. Soon after they landed, he left them and went back to his own people. A few months later, Paquiquineo and other men from his town killed the priests. Spain never tried to settle the Chesapeake again.',
+        'So when English ships showed up years later, the people of the Chesapeake already knew something about Europeans.'
+      ]
+    },
+    {
+      title: 'The lost colony',
+      when: '1584 to 1590',
+      img: 'sources/story-arrival.jpg',
+      alt: 'An old engraving of sailing ships near a long sandy shore, with Roanoke Island in the middle and small wrecked ships near the sandbars.',
+      cap: 'English ships arriving near Roanoke Island, from a drawing by John White printed in 1590. Find the wrecked ships stuck on the sandbars.',
+      credit: 'Engraving by Theodor de Bry. Library of Congress.',
+      paras: [
+        'England’s first tries were on <b>Roanoke Island</b>, in what is now North Carolina. Sir <b>Walter Raleigh</b> paid for them. Queen Elizabeth let him name the land Virginia, after her. People called her the Virgin Queen because she never married.',
+        'In 1584, two Native men named <b>Manteo</b> and <b>Wanchese</b> sailed to England with Raleigh’s explorers. They learned English and saw London. Manteo became a friend and helper to the English. Wanchese came home and turned against them.',
+        'In 1587, an artist named <b>John White</b> brought about 115 men, women, and children to Roanoke. A few weeks later, his daughter Eleanor gave birth to a baby girl named <b>Virginia Dare</b>. She was the first English child born in America.',
+        'The colony soon ran low on supplies, so John White sailed back to England for help. Then war broke out with Spain, and England needed every ship to fight the Spanish Armada. White could not get back for three years.',
+        'When he finally returned in 1590, the colonists were gone. The only clue was the word <b>CROATOAN</b> carved into a post. Croatoan was the island where Manteo’s people lived. White never found his daughter or his granddaughter, and no one knows for sure what happened to them.'
+      ]
+    },
+    {
+      title: 'A new king and a company',
+      when: '1603 to 1606',
+      img: 'sources/story-king-james.jpg',
+      alt: 'An engraved portrait of King James I in an oval frame, wearing a wide lace collar.',
+      cap: 'King James I. Jamestown would be named after him.',
+      credit: 'Engraving by Michael van der Gucht, about 1700. Library of Congress.',
+      paras: [
+        'Queen Elizabeth died in 1603. The new ruler was <b>King James I</b>. He wanted England to try again, but colonies cost a lot of money, and Roanoke had shown how risky they were.',
+        'So a group of rich merchants in London started a business called the <b>Virginia Company</b>. People bought shares in the company. If the colony found gold, silver, or a water route through America to Asia, everyone who owned a share would make money.',
+        'On April 10, 1606, King James signed a charter. It gave the Virginia Company permission to settle a big part of the coast of North America. It said the king would get one fifth of any gold and silver the settlers found. Nobody asked the people who already lived there.',
+        'The Company also wrote a set of orders. They told the settlers where to build, how to split up the work, and how to treat the Native people. The Company even chose seven men to lead the colony. It locked their names in a box and told the captains not to open it until they reached Virginia.'
+      ]
+    },
+    {
+      title: 'Who got on the ships',
+      when: 'December 1606',
+      img: 'sources/story-ships.jpg',
+      alt: 'A photo of three wooden sailing ships tied to a dock on a river, with pine trees in front.',
+      cap: 'Full-size copies of the Susan Constant, the Godspeed, and the Discovery at Jamestown Settlement in Virginia today. The Susan Constant, the biggest of the three, carried 71 people.',
+      credit: 'Photo by Carol M. Highsmith. Library of Congress.',
+      paras: [
+        'In December 1606, three small ships waited on the river in London: the <b>Susan Constant</b>, the <b>Godspeed</b>, and the tiny <b>Discovery</b>. Together they carried about 105 settlers and about 40 sailors. Every settler was a man or a boy. No women came on this trip.',
+        'Here are some of the people on board:'
+      ],
+      people: [
+        ['Christopher Newport', 'commanded the ships. He was an expert sailor who had lost an arm fighting the Spanish at sea.'],
+        ['Bartholomew Gosnold', 'had already explored the coast farther north. He gave Cape Cod its name.'],
+        ['Edward Maria Wingfield', 'was a wealthy gentleman who had helped start the Virginia Company.'],
+        ['George Percy', 'was the younger son of a rich English lord. He kept a journal, and many of the words we know about this trip are his.'],
+        ['John Smith', 'was about 27 and the son of a farmer. He had already fought as a soldier in Europe, been captured and sold as a slave, and escaped. He was brave, but he bragged a lot, and many of the gentlemen did not like him.'],
+        ['Robert Hunt', 'was the colony’s minister.'],
+        ['Samuel Collier, Nathaniel Peacock, James Brumfield, and Richard Mutton', 'were boys who came as servants. Nobody wrote down how old they were.']
+      ],
+      after: [
+        'About half of the settlers were gentlemen. In England, a gentleman gave orders and did not work in the fields. The rest were laborers, carpenters, and other workers.'
+      ]
+    },
+    {
+      title: 'Four months at sea',
+      when: 'December 1606 to April 1607',
+      img: 'sources/story-cape-henry.jpg',
+      alt: 'A corner of John Smith’s old map showing Cape Henry and Cape Charles at the mouth of the bay, a compass, and a sailing ship.',
+      cap: 'Cape Henry and Cape Charles, the two points of land at the mouth of the Chesapeake Bay, on John Smith’s map. North is on the right.',
+      credit: 'Detail of John Smith’s map of Virginia, 1612. Public domain.',
+      paras: [
+        'The ships left London on December 20, 1606. Bad winds trapped them for weeks just off the coast of England, and the settlers ate food that was supposed to last the whole trip.',
+        'Finally they sailed south, then west across the Atlantic Ocean to the islands of the Caribbean. On the island of Dominica, people paddled out in canoes and traded pineapples and potatoes for English knives and beads. On another island, the settlers rested and bathed in hot springs.',
+        'The leaders argued the whole way. They accused John Smith of planning a mutiny, which means a rebellion against the leaders. Smith spent most of the trip locked up as a prisoner, and some of the leaders wanted to hang him.',
+        'On April 26, 1607, after four months at sea, the lookouts spotted land: Virginia. They named the point <b>Cape Henry</b>, after the king’s son. George Percy wrote that he saw “faire meddowes and goodly tall Trees, with such Fresh-waters running through the woods.”',
+        'That first evening, Native men crept toward the English on the shore and shot arrows at them. Captain Gabriel Archer was hit in both hands, and a sailor was badly hurt. Percy wrote that the attackers came crawling on all fours, with their bows in their mouths.',
+        'That night, the captains opened the locked box. The seven names inside included John Smith, the prisoner. The other leaders still would not let him join the council.',
+        'Now the ships turned into a wide river to look for a place to build. Somewhere along its banks, 104 men and boys will try to make a home in Tsenacommacah. This is where you take command.'
+      ]
+    }
+  ];
+})();
+
 /* The Virginia Venture: pictures. Every scene is drawn here in code, in the style of a hand-colored 1600s map. */
 var ART = (function () {
   'use strict';
@@ -1525,6 +1644,10 @@ var ART = (function () {
   function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function paras(list) { return list.map(function (p) { return '<p>' + p + '</p>'; }).join(''); }
   function setArt(name, cap) { $('art').innerHTML = ART.draw(name); $('cap').textContent = cap; }
+  function setPhoto(ch) {
+    $('art').innerHTML = '<img class="photo" src="' + ch.img + '" alt="' + esc(ch.alt) + '">';
+    $('cap').innerHTML = esc(ch.cap) + '<span class="credit">' + esc(ch.credit) + '</span>';
+  }
   function setWhen(t) { $('when').textContent = t; }
 
   function renderStatus() {
@@ -1619,23 +1742,62 @@ var ART = (function () {
     });
   }
 
-  /* ---------- start ---------- */
-  function showStart() {
+  /* ---------- title and the true story ---------- */
+  var storyDone = false;
+  function resetGame() {
     s = VV.newState(); newsShown = {};
     status.hidden = true;
     document.body.classList.add('is-welcome');
     document.body.classList.remove('is-report');
-    setWhen('Spring 1607');
+  }
+  function showTitle() {
+    resetGame();
+    setWhen('1607');
     setArt('title', 'The Susan Constant, the Godspeed, and the Discovery reach Virginia.');
     show(
       '<div class="welcome">' +
       '<span class="kicker">A Jamestown decision game</span>' +
       '<h1 class="hero">The Virginia <span class="hl">Venture</span></h1>' +
-      '<p class="lede">It is 1607. You lead 104 settlers on the edge of a land that already belongs to someone else. Can you keep them alive?</p>' +
+      '<p class="lede">In 1607, 104 English men and boys came to build a colony in a land that already belonged to someone else. Soon you will lead them. Can you keep them alive?</p>' +
+      '<div class="prose"><p>First, read the true story of how they got here. It has six short chapters and takes about 8 minutes. Watch for names. You will meet some of these people again.</p></div>' +
+      '<div class="row"><button class="go" id="story" type="button">Start the story</button>' +
+      (storyDone ? '<button class="go quiet" id="skip" type="button">Skip to the game</button>' : '') + '</div>' +
+      '</div>',
+      'h1');
+    $('story').addEventListener('click', function () { showChapter(0); });
+    if (storyDone) $('skip').addEventListener('click', showStart);
+  }
+  function showChapter(i) {
+    var ch = VV.STORY[i], last = i === VV.STORY.length - 1;
+    document.body.classList.remove('is-welcome');
+    setWhen(ch.when); setPhoto(ch);
+    var html = '<span class="kicker">Chapter ' + (i + 1) + ' of ' + VV.STORY.length + '</span>' +
+      '<h2 class="round-title">' + ch.title + '</h2>' +
+      '<div class="prose story">' + paras(ch.paras) + '</div>';
+    if (ch.people) html += '<ul class="cast">' + ch.people.map(function (p) { return '<li><b>' + p[0] + '</b> ' + p[1] + '</li>'; }).join('') + '</ul>';
+    if (ch.after) html += '<div class="prose story">' + paras(ch.after) + '</div>';
+    html += '<div class="row">' + (i > 0 ? '<button class="go quiet" id="back" type="button">Back</button>' : '') +
+      '<button class="go" id="fwd" type="button">' + (last ? 'Take command' : 'Next chapter') + '</button></div>' +
+      '<div class="dots" aria-hidden="true">' + VV.STORY.map(function (c, k) { return '<span' + (k === i ? ' class="on"' : k < i ? ' class="past"' : '') + '></span>'; }).join('') + '</div>';
+    show(html);
+    if (i > 0) $('back').addEventListener('click', function () { showChapter(i - 1); });
+    $('fwd').addEventListener('click', function () {
+      if (last) { storyDone = true; showStart(); } else showChapter(i + 1);
+    });
+  }
+
+  /* ---------- setup ---------- */
+  function showStart() {
+    resetGame();
+    setWhen('May 1607');
+    setArt('title', 'The Susan Constant, the Godspeed, and the Discovery sail up the river.');
+    show(
+      '<div class="welcome">' +
+      '<span class="kicker">Your turn</span>' +
+      '<h1 class="hero" style="font-size:clamp(40px,6vw,64px)">Take command</h1>' +
+      '<p class="lede">It is May 1607. The council has picked you to lead the 104 settlers. The Company wants gold and profit. The Powhatan are watching from the shore.</p>' +
       '<div class="prose">' +
-      '<p>Three small ships have just crossed the Atlantic Ocean. A business in London called the Virginia Company paid for the trip. The Company wants gold, a shortcut to Asia, and anything else it can sell.</p>' +
-      '<p>This land is not empty. About 15,000 Powhatan people live here, in about 30 tribes. Their leader is Wahunsenacawh, and they call their country Tsenacommacah.</p>' +
-      '<p>The council has picked you to lead. You will make ten decisions. Before each one you can check the charter and ask for advice. After each one you will find out what the real settlers did.</p>' +
+      '<p>You will make ten decisions. Before each one you can check the charter and ask for advice. After each one you will find out what the real settlers did.</p>' +
       '<p>Keep an eye on Food and Health. If either one runs out, or if nobody is left alive, the simulation ends.</p>' +
       '</div>' +
       '<ul class="howto">' +
@@ -1824,7 +1986,7 @@ var ART = (function () {
       '<div class="row noprint"><button class="go" id="copy" type="button">Copy my report</button><button class="go quiet" id="again" type="button">Play again</button><span class="copied" id="copied" role="status"></span></div>' +
       '<div id="copyfallback"></div>';
     show(html);
-    $('again').addEventListener('click', showStart);
+    $('again').addEventListener('click', showTitle);
     $('copy').addEventListener('click', function () {
       var text = VV.reportText(s);
       function fallback() {
@@ -1839,7 +2001,7 @@ var ART = (function () {
     });
   }
 
-  showStart();
+  showTitle();
 })();
 
 </script>

@@ -4,6 +4,7 @@ A decision game about the first years of Jamestown, 1607 to 1612, for 5th grade 
 
 Students lead the colony through ten decisions. After each one they see what their choice did, what they gave up (the opportunity cost), and what the real settlers did. At the end they get a report they can copy into a doc.
 
+- **The true story first.** Before the simulation starts, students read six short chapters (about 1,300 words, roughly 8 to 10 minutes) about Tsenacommacah and the Powhatan people, Spain and Paquiquineo, the lost colony of Roanoke, King James and the Virginia Company, the people on the ships, and the voyage to Cape Henry. The story stops on the day the ships turn up the river, which is where decision 1 begins. After a student finishes one game, Play again offers to skip the story.
 - **Check the Charter.** Every decision has a Check the Charter button. It opens the real passage from the King's charter (April 1606) or the Virginia Company's instructions (November 1606) that speaks to that decision, with the key words highlighted and a plain-words version underneath.
 - **Real evidence.** After each decision, students can open the primary sources behind it in a pop-up: the real words, a plain-words version, a question to think about, and a link to the full source. There are 16 sources in all, including John Smith's map and the 1616 portrait of Pocahontas.
 - **You and the real Jamestown.** The final report puts each of the student's choices beside what the real settlers did, and charts how many of their people lived next to the real numbers.
@@ -29,7 +30,7 @@ The places, dates, numbers, and events are real. The advisors' words were writte
 
 The scene pictures are original drawings made in code for this game. No art, text, or code was copied from any other game.
 
-Every quotation in the pop-ups was copied from the page it links to. The three historical images in the `sources` folder (John Smith's map of Virginia, the 1616 engraving of Pocahontas, and John Smith's map of New England) are public domain scans from Wikimedia Commons.
+Every quotation in the pop-ups was copied from the page it links to. The three historical images in the `sources` folder (John Smith's map of Virginia, the 1616 engraving of Pocahontas, and John Smith's map of New England) are public domain scans from Wikimedia Commons. The story pictures (the town of Secotan, the 1590 map of Virginia, the English arrival at Roanoke, King James I, and Carol M. Highsmith's photo of the replica ships) come from the Library of Congress with no known restrictions on publication. The Cape Henry picture is a detail of John Smith's map.
 
 Some sources use old spellings and unfair words for Powhatan people. Henry Spelman's full account describes violence. Preview the full sources before sending students to them.
 
