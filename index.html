@@ -49,7 +49,7 @@ body.is-welcome{background:
     radial-gradient(circle at 0 0,var(--edu-sunshine) 0 var(--r1),transparent calc(var(--r1) + 1.5px)),
     radial-gradient(circle at 100% 14%,var(--edu-tech) 0 var(--r2),transparent calc(var(--r2) + 1.5px)),
     radial-gradient(circle at 3% 100%,var(--edu-light-teal) 0 var(--r2),transparent calc(var(--r2) + 1.5px)),
-    radial-gradient(circle at 100% 100%,var(--edu-light-purple) 0 var(--r3),transparent calc(var(--r3) + 1.5px)),
+    radial-gradient(circle at 100% 100%,var(--edu-tangerine) 0 var(--r3),transparent calc(var(--r3) + 1.5px)),
     var(--edu-cream);
   background-attachment:fixed}
 h1,h2,h3{font-family:var(--font-slab);font-weight:700;line-height:1.08;margin:0;text-wrap:balance;color:var(--edu-midnight)}
@@ -158,6 +158,26 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .go.quiet{background:var(--edu-white);color:var(--edu-midnight);border-color:var(--edu-midnight);font-size:15px;padding:11px 24px}
 .go.quiet:hover{background:var(--edu-midnight);color:var(--edu-white);border-color:var(--edu-midnight)}
 .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+/* ---------- The movie clip ---------- */
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.plate .video{position:relative;aspect-ratio:16/9;background:var(--edu-midnight)}
+.plate .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.plate figcaption a,.cliplink a{color:var(--edu-pacific);font-weight:600}
+.nw{grid-template-columns:repeat(2,minmax(0,1fr));display:grid;gap:14px;width:100%}
+@media (max-width:640px){.nw{grid-template-columns:minmax(0,1fr)}}
+.nwcard,.qcard{background:var(--edu-white);border-radius:18px;box-shadow:var(--shadow-card);padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px}
+.nwcard .badge,.qcard .badge{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-slab);font-weight:700;font-size:22px;color:var(--edu-midnight);flex:0 0 auto}
+.nwcard h3,.qcard h3{font-size:22px;color:var(--edu-pacific)}
+.nwcard p,.qcard p{margin:0;font-size:15.5px;line-height:1.5}
+.qhead{display:flex;align-items:center;gap:12px}
+.qlist{list-style:none;margin:0;padding:0;display:grid;gap:12px;width:100%}
+.note{font:inherit;font-size:15.5px;color:var(--edu-midnight);background:var(--edu-cream);border:2px solid var(--line);border-radius:12px;padding:9px 12px;min-height:72px;resize:vertical;width:100%;box-sizing:border-box}
+.note:focus{outline:none;border-color:var(--edu-pacific)}
+.cliplink{font-size:14px;color:var(--edu-light-grey);margin:0}
+.clipnotes{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.clipnotes li{background:var(--edu-white);border-radius:14px;box-shadow:var(--shadow-card);padding:10px 16px;font-size:15.5px;line-height:1.5}
+.clipnotes li b{display:block;color:var(--edu-space);font-size:14px}
 
 /* ---------- Welcome ---------- */
 .welcome{display:flex;flex-direction:column;align-items:flex-start;gap:18px}
@@ -697,7 +717,7 @@ var VV = (function () {
       text: function (s) {
         return [
           'You have ' + s.settlers + ' people and not nearly enough food for the winter. Many of the newcomers have never planted or hunted in their lives.',
-          'Your best trader has sailed home. The first frost is only weeks away.'
+          'Your best trader has sailed home. The first frost is only weeks away. If this goes badly, people will remember this winter by a terrible name: the Starving Time.'
         ];
       },
       other: function (s) {
@@ -736,7 +756,7 @@ var VV = (function () {
         }
       ],
       realShort: 'Sent soldiers to get corn',
-      reality: 'Captain John Ratcliffe took about fifty men to trade for corn. Only sixteen came back. After that, Powhatan warriors surrounded the fort for the winter. Meanwhile the small group living at Point Comfort had plenty of crabs and fish, and they came through the winter in good health.',
+      reality: 'Captain John Ratcliffe took about fifty men to trade for corn. Only sixteen came back. After that, Powhatan warriors surrounded the fort for the winter, and almost no food could get in. The months that followed became known as the Starving Time. Meanwhile the small group living at Point Comfort had plenty of crabs and fish, and they came through the winter in good health.',
       word: 'conflict', wordNote: 'Two years of taking corn had used up the trust between the two sides.'
     },
     {
@@ -927,6 +947,11 @@ var VV = (function () {
     lines.push('People: ' + v.people);
     lines.push('Peace: ' + v.peace);
     lines.push('Profit: ' + v.profit);
+    if (s.clip && s.clip.length) {
+      lines.push('');
+      lines.push('My notes on The New World clip:');
+      s.clip.forEach(function (n) { lines.push(n[0] + ' ' + n[1]); });
+    }
     return lines.join('\n');
   }
 
@@ -1208,7 +1233,7 @@ var VV = (function () {
     var out = [];
     if (s.firstYear != null) out.push({ title: 'The first eight months', sub: 'May 1607 to January 1608',
       you: { alive: s.firstYear, of: 104 }, real: { alive: 38, of: 104, about: false } });
-    if (s.winter) out.push({ title: 'The winter of 1609 to 1610', sub: 'Fall 1609 to spring 1610',
+    if (s.winter) out.push({ title: 'The Starving Time', sub: 'The winter of 1609 to 1610',
       you: { alive: s.winter.after, of: s.winter.before }, real: { alive: 60, of: 500, about: true } });
     return out;
   };
@@ -1759,13 +1784,13 @@ var ART = (function () {
       '<span class="kicker">A Jamestown decision game</span>' +
       '<h1 class="hero">The Virginia <span class="hl">Venture</span></h1>' +
       '<p class="lede">In 1607, 104 English men and boys came to build a colony in a land that already belonged to someone else. Soon you will lead them. Can you keep them alive?</p>' +
-      '<div class="prose"><p>First, read the true story of how they got here. It has six short chapters and takes about 8 minutes. Watch for names. You will meet some of these people again.</p></div>' +
+      '<div class="prose"><p>First, read the true story of how they got here. It has six short chapters and takes about 8 minutes. Watch for names. You will meet some of these people again. Then you will watch the ships arrive in a short movie clip.</p></div>' +
       '<div class="row"><button class="go" id="story" type="button">Start the story</button>' +
-      (storyDone ? '<button class="go quiet" id="skip" type="button">Skip to the game</button>' : '') + '</div>' +
+      (storyDone ? '<button class="go quiet" id="skip" type="button">Skip to the game</button><button class="go quiet" id="reclip" type="button">Watch the clip again</button>' : '') + '</div>' +
       '</div>',
       'h1');
     $('story').addEventListener('click', function () { showChapter(0); });
-    if (storyDone) $('skip').addEventListener('click', showStart);
+    if (storyDone) { $('skip').addEventListener('click', showStart); $('reclip').addEventListener('click', showClip); }
   }
   function showChapter(i) {
     var ch = VV.STORY[i], last = i === VV.STORY.length - 1;
@@ -1777,13 +1802,87 @@ var ART = (function () {
     if (ch.people) html += '<ul class="cast">' + ch.people.map(function (p) { return '<li><b>' + p[0] + '</b> ' + p[1] + '</li>'; }).join('') + '</ul>';
     if (ch.after) html += '<div class="prose story">' + paras(ch.after) + '</div>';
     html += '<div class="row">' + (i > 0 ? '<button class="go quiet" id="back" type="button">Back</button>' : '') +
-      '<button class="go" id="fwd" type="button">' + (last ? 'Take command' : 'Next chapter') + '</button></div>' +
+      '<button class="go" id="fwd" type="button">' + (last ? 'Watch the ships arrive' : 'Next chapter') + '</button></div>' +
       '<div class="dots" aria-hidden="true">' + VV.STORY.map(function (c, k) { return '<span' + (k === i ? ' class="on"' : k < i ? ' class="past"' : '') + '></span>'; }).join('') + '</div>';
     show(html);
     if (i > 0) $('back').addEventListener('click', function () { showChapter(i - 1); });
     $('fwd').addEventListener('click', function () {
-      if (last) { storyDone = true; showStart(); } else showChapter(i + 1);
+      if (last) { storyDone = true; showClip(); } else showChapter(i + 1);
     });
+  }
+
+
+  /* ---------- the movie clip: the opening scene of The New World ---------- */
+  var CLIP_ID = '1ivuWt8GmpH8RzeeyJA1ei-MkDUQx-eLM';
+  var CLIP_VIEW = 'https://drive.google.com/file/d/' + CLIP_ID + '/view';
+  var CLIP_QS = [
+    ['Notice', 'What is the first thing you noticed? Which sound or picture stuck with you?', 'var(--edu-sunshine)'],
+    ['Two sides', 'The camera shows people on the shore and people on the ships. How do you think each group feels as the ships get closer? What in the clip makes you say that?', 'var(--edu-pink)'],
+    ['The prisoner', 'One man arrives locked up below deck. Who might he be? Why would someone show up to a brand-new colony as a prisoner?', 'var(--edu-light-purple)'],
+    ['Clues', 'Look at what the English brought with them: ships, armor, weapons, tools. What do those things tell you about what they expected to find or do here?', 'var(--edu-light-teal)'],
+    ['Movie or history?', 'This movie was made almost 400 years after the ships landed. Which parts could the filmmakers know for sure? Which parts did they have to imagine?', 'var(--edu-green)'],
+    ['Wonder', 'What do you wonder now? Write one question you want answered as you play.', 'var(--edu-tech)']
+  ];
+  var clip = { notice: '', wonder: '', answers: ['', '', '', '', '', ''] };
+  function setVideo() {
+    if ($('art').querySelector('iframe')) return; // keep it playing between the two clip screens
+    $('art').innerHTML = '<div class="video"><iframe src="https://drive.google.com/file/d/' + CLIP_ID + '/preview" title="The opening scene of The New World" allow="autoplay; fullscreen" allowfullscreen></iframe></div>';
+    $('cap').innerHTML = 'The opening scene of <i>The New World</i> (2005). Press play, then use the full-screen button.' +
+      '<span class="credit">Video won’t play? <a href="' + CLIP_VIEW + '" target="_blank" rel="noopener">Open it in Google Drive</a>.</span>';
+  }
+  function saveClip() {
+    var n = $('c-notice'), w = $('c-wonder');
+    if (n) clip.notice = n.value.trim();
+    if (w) clip.wonder = w.value.trim();
+    CLIP_QS.forEach(function (q, k) { var a = $('c-q' + k); if (a) clip.answers[k] = a.value.trim(); });
+  }
+  function showClip() {
+    document.body.classList.remove('is-welcome');
+    setWhen('April 1607'); setVideo();
+    show(
+      '<span class="kicker">Before you take command</span>' +
+      '<h2 class="round-title">You’re about to watch the opening scene of <i>The New World</i></h2>' +
+      '<div class="prose story"><p><i>The New World</i> is a movie made in 2005 about the first months of Jamestown. This scene shows the Susan Constant, the Godspeed, and the Discovery sailing into Tsenacommacah in the spring of 1607. That is right where the story you just read ends.</p>' +
+      '<p>Watch closely. Then be ready to share.</p></div>' +
+      '<div class="nw">' +
+      '<div class="nwcard"><div class="qhead"><span class="badge" style="background:var(--edu-sunshine)">!</span><h3>What do you notice?</h3></div>' +
+      '<p>Sights, sounds, people, and objects. What catches your eye? What do you hear?</p>' +
+      '<label class="sr" for="c-notice">What I notice</label><textarea class="note" id="c-notice" placeholder="I notice..."></textarea></div>' +
+      '<div class="nwcard"><div class="qhead"><span class="badge" style="background:var(--edu-tech)">?</span><h3>What do you wonder?</h3></div>' +
+      '<p>What questions pop into your head? What do you want to find out?</p>' +
+      '<label class="sr" for="c-wonder">What I wonder</label><textarea class="note" id="c-wonder" placeholder="I wonder..."></textarea></div>' +
+      '</div>' +
+      '<p class="cliplink">Your notes go on your final report.</p>' +
+      '<div class="row"><button class="go quiet" id="back" type="button">Back</button><button class="go" id="fwd" type="button">After the clip</button>' +
+      '<button class="go quiet" id="skipclip" type="button">Skip the clip</button></div>');
+    $('c-notice').value = clip.notice; $('c-wonder').value = clip.wonder;
+    $('back').addEventListener('click', function () { saveClip(); showChapter(VV.STORY.length - 1); });
+    $('fwd').addEventListener('click', function () { saveClip(); showClipTalk(); });
+    $('skipclip').addEventListener('click', function () { saveClip(); showStart(); });
+  }
+  function showClipTalk() {
+    setWhen('April 1607'); setVideo();
+    var cards = CLIP_QS.map(function (q, k) {
+      return '<li class="qcard"><div class="qhead"><span class="badge" style="background:' + q[2] + '">' + (k + 1) + '</span><h3>' + q[0] + '</h3></div>' +
+        '<p>' + q[1] + '</p><label class="sr" for="c-q' + k + '">Your answer to question ' + (k + 1) + '</label>' +
+        '<textarea class="note" id="c-q' + k + '" placeholder="Talk first, then jot an idea (optional)"></textarea></li>';
+    }).join('');
+    show(
+      '<span class="kicker">After the clip</span>' +
+      '<h2 class="round-title">Turn and talk</h2>' +
+      '<div class="prose story"><p>Talk about these with a partner. You can watch the clip again while you talk. Writing an answer is up to you.</p></div>' +
+      '<ol class="qlist">' + cards + '</ol>' +
+      '<div class="row"><button class="go quiet" id="back" type="button">Back</button><button class="go" id="fwd" type="button">Take command</button></div>');
+    CLIP_QS.forEach(function (q, k) { $('c-q' + k).value = clip.answers[k]; });
+    $('back').addEventListener('click', function () { saveClip(); showClip(); });
+    $('fwd').addEventListener('click', function () { saveClip(); showStart(); });
+  }
+  function clipNotes() {
+    var out = [];
+    if (clip.notice) out.push(['I noticed', clip.notice]);
+    if (clip.wonder) out.push(['I wondered', clip.wonder]);
+    CLIP_QS.forEach(function (q, k) { if (clip.answers[k]) out.push([q[0] + ': ' + q[1], clip.answers[k]]); });
+    return out;
   }
 
   /* ---------- setup ---------- */
@@ -1813,7 +1912,7 @@ var ART = (function () {
       '</div>',
       'h1');
     $('begin').addEventListener('click', function () {
-      s.name = $('leader').value.trim();
+      s.name = $('leader').value.trim(); s.clip = clipNotes();
       document.body.classList.remove('is-welcome');
       status.hidden = false; renderStatus(); showRound();
     });
@@ -1877,7 +1976,7 @@ var ART = (function () {
   function showResult(e) {
     var r = VV.ROUNDS[e.round];
     renderStatus();
-    var nextLabel = s.lost ? 'See your report' : e.round === 8 ? 'Face the winter' : e.round === 9 ? 'Read your report' : 'Next decision';
+    var nextLabel = s.lost ? 'See your report' : e.round === 8 ? 'Face the Starving Time' : e.round === 9 ? 'Read your report' : 'Next decision';
     show(
       '<div class="result">' +
       '<h2 class="round-title">You chose: ' + e.label + '</h2>' +
@@ -1910,10 +2009,10 @@ var ART = (function () {
         : 'It is a cold, lean winter, but your storehouse holds out. There is sickness, and there are burials. When the ice melts, most of your people are still here.';
     show(
       '<div class="result">' +
-      '<h2 class="round-title">The winter of 1609 to 1610</h2>' +
+      '<span class="kicker">Winter 1609 to 1610</span><h2 class="round-title">The Starving Time</h2>' +
       '<p>' + story + '</p>' +
       '<div class="bignum"><div><b>' + w.before + '</b><span>people in the fall</span></div><div><b>' + w.after + '</b><span>alive in the spring</span></div></div>' + (s.lost ? overBox() : '') +
-      '<div class="real"><h3>What really happened</h3><p>About 500 people went into that winter. About 60 came out. The settlers called it the Starving Time. In June 1610 the survivors gave up, boarded their ships, and sailed away. Before they reached the ocean, they met a fleet coming in with new settlers and a year of supplies. They turned around.</p></div>' +
+      '<div class="real"><h3>What really happened</h3><p>The real settlers called this winter the Starving Time. About 500 people went into it. About 60 came out. In June 1610 the survivors gave up, boarded their ships, and sailed away. Before they reached the ocean, they met a fleet coming in with new settlers and a year of supplies. They turned around.</p></div>' +
       '<button class="go" id="next" type="button">' + (s.lost ? 'See your report' : 'Keep going') + '</button>' +
       '</div>');
     $('next').addEventListener('click', function () {
@@ -1964,6 +2063,7 @@ var ART = (function () {
       '<li><span class="sym part" aria-hidden="true">≈</span>' + t.part + ' partly the same</li>' +
       '<li><span class="sym diff" aria-hidden="true">≠</span>' + t.diff + ' different</li></ul>' +
       '<ul class="cmp-list">' + cards + '</ul>' +
+      (s.clip && s.clip.length ? '<h3 class="section">My notes on <i>The New World</i> clip</h3><ul class="clipnotes">' + s.clip.map(function (n) { return '<li><b>' + n[0] + '</b>' + esc(n[1]) + '</li>'; }).join('') + '</ul>' : '') +
       '<h3 class="section">Think it over</h3>' +
       '<ol class="think">' +
       '<li>Which of your decisions helped the colony most? What was its opportunity cost?</li>' +
