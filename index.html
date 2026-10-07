@@ -100,7 +100,10 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .story{font-size:18px;line-height:1.65}
 .story b,.cast b{color:var(--edu-space)}
 .cast{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.cast li{background:var(--edu-white);border-radius:14px;box-shadow:var(--shadow-card);padding:10px 16px;font-size:16px;line-height:1.5}
+.cast li{background:var(--edu-white);border-radius:14px;box-shadow:var(--shadow-card);padding:10px 16px;font-size:16px;line-height:1.5;display:flex;gap:14px;align-items:center}
+.cast .face{flex:0 0 auto;width:72px;height:86px;border-radius:12px;object-fit:cover;object-position:50% 20%;background:var(--edu-cream)}
+.cast .face.none{display:grid;place-items:center;font-family:var(--font-slab);font-weight:700;font-size:24px;color:var(--edu-space);background:var(--tint-blue)}
+.cast .credit{display:block;font-size:12px;color:var(--edu-light-grey);margin-top:2px}
 .dots{display:flex;gap:8px}
 .dots span{width:10px;height:10px;border-radius:50%;background:var(--track)}
 .dots span.past{background:var(--edu-light-teal)}
@@ -158,6 +161,12 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .go.quiet{background:var(--edu-white);color:var(--edu-midnight);border-color:var(--edu-midnight);font-size:15px;padding:11px 24px}
 .go.quiet:hover{background:var(--edu-midnight);color:var(--edu-white);border-color:var(--edu-midnight)}
 .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+/* ---------- Clickable report cards ---------- */
+.cmp[data-real]{cursor:pointer;transition:transform .12s,box-shadow .12s}
+.cmp[data-real]:hover{transform:translateY(-2px);box-shadow:var(--shadow-pop)}
+.cmp-more{display:block;margin-top:8px;font-size:13.5px;font-weight:700;color:var(--edu-pacific)}
+@media print{.cmp-more{display:none}}
 
 /* ---------- Sound button ---------- */
 .bar-r{display:flex;align-items:center;gap:10px}
@@ -257,6 +266,7 @@ body.is-report .left{position:static;display:grid;grid-template-columns:minmax(0
 .m-img{margin:0;background:var(--edu-cream);border-radius:14px;padding:10px;text-align:center}
 .m-img img{display:block;max-width:100%;max-height:62vh;width:auto;height:auto;margin-inline:auto;border-radius:6px}
 .m-img.tall img{max-height:70vh}
+.m-img.short img{max-height:38vh}
 .m-img figcaption{font-size:12.5px;color:var(--edu-light-grey);margin-top:6px}
 .m-label{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--edu-dark-grey);display:block;margin-bottom:4px}
 .m-quote{margin:0;background:var(--tint-sun);border-radius:16px;padding:14px 20px}
@@ -358,12 +368,12 @@ var VV = (function () {
 
   var ROUNDS = [
     {
-      id: 'spot', title: 'Pick the spot', when: 'May 1607', art: 'map', weight: 0.5,
-      cap: 'The river and the bay. Each small ring is a Powhatan town.',
+      id: 'spot', title: 'Pick the spot', when: 'May 1607', weight: 0.5,
+      pic: {"img": "sources/smith-map-virginia.jpg", "cap": "John Smith’s map of Virginia, printed in 1612. West is at the top, so the rivers flow down toward the Chesapeake Bay.", "alt": "An old map of rivers flowing into a bay, with tiny towns marked along the banks.", "credit": "Engraved by William Hole. Public domain, via Wikimedia Commons."},
       text: function () {
         return [
           'Your ships have sailed out of the bay and into a wide river. The Company’s orders say to settle far up a river, where Spanish ships cannot find you.',
-          'Your scouts have found three places. Study the map, then choose.'
+          'Your scouts have found three places along the river. Choose one.'
         ];
       },
       advisors: function () {
@@ -400,12 +410,13 @@ var VV = (function () {
         }
       ],
       realShort: 'Chose the island',
+      brief: "The real settlers chose the island and named their town Jamestown, after King James. It was easy to defend, but the swampy ground and salty water made many people sick.",
       reality: 'The real settlers chose the island and named their town Jamestown, after King James. Gabriel Archer wanted a high bluff instead, but the ships could not get close to shore there. The island was easy to defend. It was also one of the unhealthiest spots on the river.',
       word: 'opportunity cost', wordNote: 'Every spot had one. No place had everything.'
     },
     {
-      id: 'first', title: 'First things first', when: 'May and June 1607', art: 'landing', weight: 1,
-      cap: 'The first camp, with the ships at anchor.',
+      id: 'first', title: 'First things first', when: 'May and June 1607', weight: 1,
+      pic: {"img": "sources/scene-island.jpg", "cap": "Jamestown Island in the James River, seen from space. The swampy island is almost cut off from the land.", "alt": "A satellite photo of a green island in a wide brown river.", "credit": "NASA, public domain, via Wikimedia Commons."},
       text: function (s) {
         return [
           'Everyone is finally off the ships at ' + SITE_NAMES[s.site] + '. There is a lot to do and not enough hands.',
@@ -444,12 +455,13 @@ var VV = (function () {
         }
       ],
       realShort: 'Explored first, then built the fort',
+      brief: "The settlers explored first. While Captain Newport was away, about 200 warriors attacked the camp, so the settlers hurried to build a triangle-shaped fort.",
       reality: 'The real settlers did all three, in a risky order. Captain Newport took a group up the river to explore. While he was gone, on May 26, about 200 warriors attacked the camp. A boy was killed and more than ten men were hurt. After that the settlers built a triangle-shaped fort. They finished it on June 15.',
       word: 'conflict', wordNote: 'This one began almost as soon as the ships landed.'
     },
     {
-      id: 'work', title: 'Who does the work?', when: 'Summer 1607', art: 'fort', weight: 1,
-      cap: 'Inside the walls. Some men work. Some do not.',
+      id: 'work', title: 'Who does the work?', when: 'Summer 1607', weight: 1,
+      pic: {"img": "sources/scene-fort-dig.jpg", "cap": "In 1996, archaeologists found the real James Fort. Here they dig where its walls once stood.", "alt": "Archaeologists digging in a large square pit of brown soil.", "credit": "Photo by Ken Lund, CC BY-SA 2.0, via Wikimedia Commons."},
       text: function () {
         return [
           'About half of your settlers are gentlemen. Back in England, gentlemen did not farm, chop wood, or dig. Many came here to get rich, and they expect someone else to do the hard work.',
@@ -487,12 +499,13 @@ var VV = (function () {
         }
       ],
       realShort: 'Many men did little work until 1608',
+      brief: "At first, many of the gentlemen refused to work. In 1608, John Smith made a new rule: “He that will not work shall not eat.”",
       reality: 'At first, many of the men did very little. In 1608 John Smith became the leader and made his famous rule: he that will not work shall not eat. Under Smith the men worked about six hours a day, and far fewer of them died.',
       word: 'incentive', wordNote: 'Food can be one. So can the fear of going without it.'
     },
     {
-      id: 'water', title: 'The sickly season', when: 'August 1607', art: 'summer', weight: 2.5,
-      cap: 'A hot, dry August on the river.',
+      id: 'water', title: 'The sickly season', when: 'August 1607', weight: 2.5,
+      pic: {"img": "sources/scene-sickness.jpg", "cap": "Sick settlers at Jamestown, as an artist imagined them in 1898.", "alt": "An old drawing of sick and tired men lying inside a rough shelter.", "credit": "Public domain, via Wikimedia Commons."},
       text: function (s) {
         var w = {
           island: 'The only water comes from the river. At high tide it is salty. At low tide it is slimy and full of filth.',
@@ -540,12 +553,13 @@ var VV = (function () {
         }
       ],
       realShort: 'Kept drinking from the river',
+      brief: "The settlers kept drinking the dirty river water all summer. By the end of September 1607, almost half of them were dead.",
       reality: 'The real settlers drank from the river all summer. By the end of September, almost half of them were dead. George Percy wrote down their names one by one. The colony did not dig a good well until early 1609, when John Smith was the leader.',
       word: 'adapt', wordNote: 'What worked in England did not work on this river.'
     },
     {
-      id: 'corn', title: 'The empty storehouse', when: 'Fall 1607', art: 'town', weight: 1,
-      cap: 'A Powhatan town at harvest time.',
+      id: 'corn', title: 'The empty storehouse', when: 'Fall 1607', weight: 1,
+      pic: {"img": "sources/scene-corn.jpg", "cap": "Powhatan towns grew far more corn than the English. This detail is from John White’s picture of Secotan.", "alt": "An old engraving of tall rows of corn beside a town.", "credit": "Theodor de Bry after John White, 1590. Library of Congress."},
       text: function () {
         return [
           'The food from England is almost gone. Each man gets a small cup of wheat and a small cup of barley a day, and there are worms in it.',
@@ -584,12 +598,13 @@ var VV = (function () {
         }
       ],
       realShort: 'Traded for corn',
+      brief: "When the food ran out, Powhatan people brought corn, fish, and meat to the starving English. John Smith later wrote that without their help, the colony would have starved.",
       reality: 'When the food ran out, Powhatan people brought corn, fish, and meat to the starving settlers. John Smith also went from town to town trading copper, beads, and hatchets for corn. He was not always friendly about it. Sometimes he fired his guns first and traded second. Smith later wrote that without Powhatan food, the English would have starved.',
       word: 'collaboration', wordNote: 'The English got corn. The Powhatan got copper and tools.'
     },
     {
-      id: 'boys', title: 'Two boys, two worlds', when: 'February 1608', art: 'meeting', weight: 0.6,
-      cap: 'Werowocomoco, the Powhatan capital.',
+      id: 'boys', title: 'Two boys, two worlds', when: 'February 1608', weight: 0.6,
+      pic: {"img": "sources/scene-powhatan.jpg", "cap": "Wahunsenacawh in his house at Werowocomoco, from John Smith’s map.", "alt": "An engraving of a leader seated by a fire in a long house, with people around him.", "credit": "Engraved by William Hole. Public domain, via Wikimedia Commons."},
       text: function () {
         return [
           'You visit Wahunsenacawh at his capital, Werowocomoco. Neither side speaks the other’s language well, and that makes everything harder.',
@@ -628,12 +643,13 @@ var VV = (function () {
         }
       ],
       realShort: 'Made the trade',
+      brief: "The trade really happened. Thomas Savage lived with the Powhatan for about three years, and Namontack sailed to England and came home to tell Wahunsenacawh what he saw.",
       reality: 'The trade really happened. Thomas Savage lived with the Powhatan for about three years and became one of the colony’s best interpreters. Namontack sailed to England with Captain Newport and came back to tell Wahunsenacawh what he had seen.',
       word: 'collaboration', wordNote: 'Each side gave something and each side learned something.'
     },
     {
-      id: 'gold', title: 'Gold fever', when: 'Spring 1608', art: 'gold', weight: 1,
-      cap: 'Loading the ship for London.',
+      id: 'gold', title: 'Gold fever', when: 'Spring 1608', weight: 1,
+      pic: {"img": "sources/scene-pyrite.jpg", "cap": "Pyrite, also called fool’s gold. It sparkles like gold but is worth very little.", "alt": "A shiny gold-colored rock with square crystals.", "credit": "Photo by Stephanie Clifford, CC BY 2.0, via Wikimedia Commons."},
       text: function () {
         return [
           'A settler digging near the river finds dirt that sparkles in the sun. Word spreads fast.',
@@ -671,12 +687,13 @@ var VV = (function () {
         }
       ],
       realShort: 'Dug for gold',
+      brief: "The settlers spent weeks digging shiny dirt instead of planting. When the ship reached England, the “gold” turned out to be worthless.",
       reality: 'The real settlers caught gold fever. One of them complained that there was no talk, no hope, and no work except to dig gold, wash gold, refine gold, and load gold. The ship carried the dirt to England, where it turned out to be worthless.',
       word: 'opportunity cost', wordNote: 'Every hour spent digging was an hour not spent planting.'
     },
     {
-      id: 'dry', title: 'The dry years', when: 'Winter 1608 to 1609', art: 'drought', weight: 1,
-      cap: 'Corn that never grew tall.',
+      id: 'dry', title: 'The dry years', when: 'Winter 1608 to 1609', weight: 1,
+      pic: {"img": "sources/scene-adventures.jpg", "cap": "Scenes from John Smith’s adventures in Virginia, printed in his 1624 book.", "alt": "A page of small engravings showing Smith with Powhatan leaders, a map, and a ceremony.", "credit": "Robert Vaughan, 1624. Public domain, via Wikimedia Commons."},
       text: function (s) {
         return [
           'It has barely rained for two years. Corn is small and scarce in every field on the river, yours and the Powhatan’s. You now have ' + s.settlers + ' mouths to feed.',
@@ -716,12 +733,13 @@ var VV = (function () {
         }
       ],
       realShort: 'Did some of all three',
+      brief: "John Smith traded, threatened, and sent men off to live on oysters and fish. Tree rings show these were the driest years in Virginia in almost 800 years.",
       reality: 'John Smith did some of all three. He led armed trips that scared towns into trading. He had forty acres planted with help from Kemps and Tassore. And when rats ruined the stored corn in 1609, he sent groups of men to live on oysters and fish. Scientists who study tree rings have found that these were the driest years in that part of Virginia in almost 800 years.',
       word: 'adapt', wordNote: 'The settlers who lived were the ones who learned new ways to find food.'
     },
     {
-      id: 'snow', title: 'Before the snow', when: 'Fall 1609', art: 'autumn', weight: 0.5,
-      cap: 'A crowded fort with winter on the way.',
+      id: 'snow', title: 'Before the snow', when: 'Fall 1609', weight: 0.5,
+      pic: {"img": "sources/scene-pamunkey.jpg", "cap": "From John Smith’s 1624 book: Smith grabs Opechancanough, the Pamunkey leader, to force his people to give corn.", "alt": "An engraving of an Englishman holding a pistol to a tall Native leader.", "credit": "Robert Vaughan, 1624. Public domain, via Wikimedia Commons."},
       text: function (s) {
         return [
           'You have ' + s.settlers + ' people and not nearly enough food for the winter. Many of the newcomers have never planted or hunted in their lives.',
@@ -763,13 +781,14 @@ var VV = (function () {
           gaveUp: 'the safety of keeping everyone inside the walls.'
         }
       ],
-      realShort: 'Sent soldiers to get corn',
+      realShort: 'Sent soldiers for corn. Then came the Starving Time',
+      brief: "Most of the men sent to get corn were killed, and Powhatan warriors surrounded the fort. That winter became known as the Starving Time. About 500 people went into it, and only about 60 came out.",
       reality: 'Captain John Ratcliffe took about fifty men to trade for corn. Only sixteen came back. After that, Powhatan warriors surrounded the fort for the winter, and almost no food could get in. The months that followed became known as the Starving Time. Meanwhile the small group living at Point Comfort had plenty of crabs and fish, and they came through the winter in good health.',
       word: 'conflict', wordNote: 'Two years of taking corn had used up the trust between the two sides.'
     },
     {
-      id: 'crop', title: 'What will make Virginia pay?', when: '1612', art: 'tobacco', weight: 0,
-      cap: 'A new crop takes over the fields.',
+      id: 'crop', title: 'What will make Virginia pay?', when: '1612', weight: 0,
+      pic: {"img": "sources/scene-rolfe.jpg", "cap": "John Rolfe planting tobacco, from a book printed in 1875.", "alt": "An old drawing of a man in a field of broad-leafed tobacco plants.", "credit": "Public domain, via Wikimedia Commons."},
       text: function () {
         return [
           'The colony is still here, but the Company has spent a fortune and earned almost nothing. No gold. No shortcut to Asia. The investors in London are running out of patience.',
@@ -808,6 +827,7 @@ var VV = (function () {
         }
       ],
       realShort: 'Planted tobacco everywhere',
+      brief: "John Rolfe’s tobacco became the crop that paid for everything. But tobacco farms needed more and more land, and that pushed the English and the Powhatan toward war.",
       reality: 'John Rolfe sent his first tobacco to England in 1614, and soon it was the crop that paid for everything. For a while settlers even planted it in the streets of Jamestown. Leaders had to order farmers to grow corn too. Tobacco made the colony rich, and it made the colony hungry for land. That hunger pushed the English and the Powhatan toward war.',
       word: 'incentive', wordNote: 'Money from tobacco was a powerful one. It changed how the whole colony behaved.'
     }
@@ -955,11 +975,6 @@ var VV = (function () {
     lines.push('People: ' + v.people);
     lines.push('Peace: ' + v.peace);
     lines.push('Profit: ' + v.profit);
-    if (s.clip && s.clip.length) {
-      lines.push('');
-      lines.push('My notes on The New World clip:');
-      s.clip.forEach(function (n) { lines.push(n[0] + ' ' + n[1]); });
-    }
     return lines.join('\n');
   }
 
@@ -1319,10 +1334,10 @@ var VV = (function () {
         'Watch for these four. You will meet them again:'
       ],
       people: [
-        ['Christopher Newport', 'commanded the ships. He was an expert sailor who had lost an arm fighting the Spanish.'],
-        ['Edward Maria Wingfield', 'was a rich gentleman who helped start the Virginia Company.'],
-        ['George Percy', 'was the son of a lord. He kept a journal, so we know a lot about the trip from him.'],
-        ['John Smith', 'was about 27, the son of a farmer, and already a tough soldier. He was brave, but he bragged a lot. Many of the gentlemen did not like him.']
+        ['Christopher Newport', 'commanded the ships. He was an expert sailor who had lost an arm fighting the Spanish.', null, 'No picture of him survives.'],
+        ['Edward Maria Wingfield', 'was a rich gentleman who helped start the Virginia Company.', null, 'No picture of him survives.'],
+        ['George Percy', 'was the son of a lord. He kept a journal, so we know a lot about the trip from him.', 'https://commons.wikimedia.org/wiki/Special:FilePath/George_Percy_(Syon_House)_(cropped).png?width=240', 'Painting at Syon House, England. Photo by Pjolsenharbich, CC BY-SA 4.0, via Wikimedia Commons.'],
+        ['John Smith', 'was about 27, the son of a farmer, and already a tough soldier. He was brave, but he bragged a lot. Many of the gentlemen did not like him.', 'sources/person-smith.jpg', 'From his map of New England, 1616. Public domain.']
       ],
       after: [
         'About half of the settlers were gentlemen. In England, gentlemen gave orders. They did not work in the fields.'
@@ -1343,312 +1358,6 @@ var VV = (function () {
       ]
     }
   ];
-})();
-
-/* The Virginia Venture: pictures. Every scene is drawn here in code, in the style of a hand-colored 1600s map. */
-var ART = (function () {
-  'use strict';
-  /* Every color below comes from the Edutopia palette or a soft tint of it. */
-  var C = { ink: '#1D2A44', sky: '#DFF5FD', dawn: '#FFEFC2', gray: '#EEE3F9', water: '#A5E6FB', deep: '#0094C7',
-    far: '#8ADBD5', land: '#DDEFA6', land2: '#C3E27A', leaf: '#6FB300', leafD: '#00AFAB', sand: '#FFEFC2',
-    wood: '#004861', woodD: '#1D2A44', sail: '#FFFFFF', thatch: '#FFBC0D', wall: '#FFFFFF', mat: '#FFD76E',
-    corn: '#FFBC0D', copper: '#532681', snow: '#FFFFFF', stone: '#D9D2C5', red: '#F27179', dry: '#FFE39A', mud: '#FFD08A',
-    tan: '#FF9B0D', tanL: '#FFD08A', pink: '#E75CAE' };
-  var W = 800, H = 340;
-  var SK = 'stroke="' + C.ink + '" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"';
-
-  function rng(seed) { var a = seed >>> 0; return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
-  function g(x, y, s, inner) { return '<g transform="translate(' + x + ' ' + y + ') scale(' + (s || 1) + ')">' + inner + '</g>'; }
-  function rect(x, y, w, h, fill) { return '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + fill + '"/>'; }
-
-  function sky(fill, h) { return rect(0, 0, W, h, fill); }
-  function farShore(y, seed, fill) {
-    var r = rng(seed), d = 'M0,' + y, x = 0;
-    while (x < W) { var w = 14 + r() * 26, hh = 8 + r() * 12; d += ' q' + (w / 2) + ',' + (-hh) + ' ' + w + ',0'; x += w; }
-    d += ' L' + W + ',' + (y + 14) + ' L0,' + (y + 14) + ' Z';
-    return '<path d="' + d + '" fill="' + (fill || C.far) + '" ' + SK + '/>';
-  }
-  function river(y0, y1, seed, fill) {
-    var r = rng(seed), out = rect(0, y0, W, y1 - y0, fill || C.water);
-    var n = Math.round((y1 - y0) * 0.5);
-    for (var i = 0; i < n; i++) {
-      var x = r() * (W - 30), y = y0 + 8 + r() * (y1 - y0 - 14);
-      out += '<path d="M' + x.toFixed(0) + ',' + y.toFixed(0) + ' q4,-3 8,0 t8,0" fill="none" stroke="' + C.deep + '" stroke-width="1.2" stroke-linecap="round" opacity=".55"/>';
-    }
-    return out;
-  }
-  function land(y, amp, fill) {
-    return '<path d="M0,' + y + ' Q200,' + (y - amp) + ' 400,' + y + ' T800,' + (y - amp / 2) + ' L810,' + (y - amp / 2) + ' L810,' + (H + 10) + ' L-10,' + (H + 10) + ' L-10,' + y + ' Z" fill="' + (fill || C.land) + '" ' + SK + '/>';
-  }
-  function tufts(seed, y0, y1, n, color) {
-    var r = rng(seed), out = '';
-    for (var i = 0; i < n; i++) {
-      var x = r() * W, y = y0 + r() * (y1 - y0);
-      out += '<path d="M' + x.toFixed(0) + ',' + y.toFixed(0) + ' l-3,-7 M' + x.toFixed(0) + ',' + y.toFixed(0) + ' l0,-9 M' + x.toFixed(0) + ',' + y.toFixed(0) + ' l3,-7" stroke="' + (color || C.leaf) + '" stroke-width="1.4" stroke-linecap="round" fill="none"/>';
-    }
-    return out;
-  }
-
-  function sail(cx, yTop, yBot, w) {
-    var mid = (yTop + yBot) / 2;
-    return '<path d="M' + (cx - w) + ',' + yTop + ' L' + (cx + w) + ',' + yTop + ' Q' + (cx + w + 7) + ',' + mid + ' ' + (cx + w) + ',' + yBot + ' L' + (cx - w) + ',' + yBot + ' Q' + (cx - w + 9) + ',' + mid + ' ' + (cx - w) + ',' + yTop + ' Z" fill="' + C.sail + '" ' + SK + '/>';
-  }
-  function ship(x, y, s, furled) {
-    var inner = '';
-    inner += '<path d="M-70,-8 L-98,-28" ' + SK + ' fill="none"/>';
-    inner += '<path d="M-30,-18 V-92 M10,-18 V-116 M50,-28 V-86" ' + SK + ' fill="none"/>';
-    if (furled) {
-      inner += '<path d="M-46,-70 H-14 M-12,-88 H32 M-8,-52 H28 M38,-66 H62" stroke="' + C.sail + '" stroke-width="6" stroke-linecap="round"/>';
-      inner += '<path d="M-46,-70 H-14 M-12,-88 H32 M-8,-52 H28 M38,-66 H62" ' + SK + ' fill="none" stroke-width="1"/>';
-    } else {
-      inner += sail(-30, -84, -34, 17) + sail(10, -106, -74, 15) + sail(10, -70, -26, 22);
-      inner += '<path d="M50,-84 L72,-36 L46,-34 Z" fill="' + C.sail + '" ' + SK + '/>';
-    }
-    inner += '<path d="M-72,-6 L-58,-22 L-36,-18 L42,-18 L58,-32 L80,-32 L72,-4 Q20,22 -52,10 Z" fill="' + C.wood + '" ' + SK + '/>';
-    inner += '<path d="M-62,-9 Q10,10 74,-14" fill="none" stroke="' + C.corn + '" stroke-width="2.4"/>';
-    inner += '<path d="M10,-116 h18 v11 h-18 z" fill="#fff" ' + SK + ' stroke-width="1"/><path d="M19,-116 v11 M10,-110.5 h18" stroke="' + C.red + '" stroke-width="2.4"/>';
-    return g(x, y, s, inner);
-  }
-  function boat(x, y, s, withSail) {
-    var inner = '';
-    if (withSail) inner += '<path d="M0,-4 V-44" ' + SK + '/><path d="M2,-42 L22,-10 L2,-10 Z" fill="' + C.sail + '" ' + SK + '/>';
-    inner += '<path d="M-26,-6 Q0,10 28,-6 L22,3 Q0,10 -20,3 Z" fill="' + C.wood + '" ' + SK + '/>';
-    inner += person(-10, -4, 0.55, { hat: true }) + person(8, -4, 0.55, { hat: true });
-    return g(x, y, s, inner);
-  }
-  function canoe(x, y, s) {
-    var inner = '<path d="M-34,-3 Q0,7 34,-3 Q0,3 -34,-3 Z" fill="' + C.woodD + '" ' + SK + '/>';
-    inner += person(-12, -3, 0.55, { tunic: C.tan }) + person(10, -3, 0.55, { tunic: C.tan });
-    inner += '<path d="M-6,-12 L-20,4 M16,-12 L2,4" ' + SK + ' fill="none"/>';
-    return g(x, y, s, inner);
-  }
-  function tree(x, y, s, fill) {
-    var f = fill || C.leaf;
-    return g(x, y, s, '<path d="M-3,0 L-2,-22 L2,-22 L3,0 Z" fill="' + C.woodD + '" ' + SK + '/>' +
-      '<circle cx="-11" cy="-30" r="12" fill="' + f + '" ' + SK + '/><circle cx="11" cy="-31" r="13" fill="' + f + '" ' + SK + '/><circle cx="0" cy="-44" r="14" fill="' + f + '" ' + SK + '/>' +
-      '<path d="M-6,-44 q3,-5 8,-3 M6,-30 q4,-4 8,-1" fill="none" stroke="' + C.ink + '" stroke-width="1.2" opacity=".5"/>');
-  }
-  function pine(x, y, s, snowy) {
-    var f = snowy ? C.far : C.leafD;
-    var inner = '<path d="M-2,0 V-12 H2 V0 Z" fill="' + C.woodD + '" ' + SK + '/>' +
-      '<path d="M-14,-10 L0,-34 L14,-10 Z M-11,-26 L0,-48 L11,-26 Z M-8,-42 L0,-60 L8,-42 Z" fill="' + f + '" ' + SK + '/>';
-    if (snowy) inner += '<path d="M-5,-49 L0,-60 L5,-49 Z M-7,-33 L0,-47 L7,-33 Z" fill="' + C.snow + '"/>';
-    return g(x, y, s, inner);
-  }
-  function bare(x, y, s) {
-    return g(x, y, s, '<path d="M0,0 V-34 M0,-14 L-12,-30 M0,-20 L11,-36 M0,-28 L-7,-44 M0,-34 L6,-50 M-12,-30 L-18,-34 M11,-36 L18,-38" fill="none" stroke="' + C.woodD + '" stroke-width="2.4" stroke-linecap="round"/>');
-  }
-  function stump(x, y) { return g(x, y, 1, '<path d="M-6,0 V-7 H6 V0 Z" fill="' + C.tan + '" ' + SK + '/><ellipse cx="0" cy="-7" rx="6" ry="2.4" fill="' + C.sand + '" ' + SK + '/>'); }
-
-  function palisade(x1, y1, x2, y2, h, fill) {
-    var out = '<path d="M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2 + ' L' + x2 + ',' + (y2 - h) + ' L' + x1 + ',' + (y1 - h) + ' Z" fill="' + (fill || C.wood) + '" ' + SK + '/>';
-    var len = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)), n = Math.max(2, Math.round(len / 7)), d = '';
-    for (var i = 1; i < n; i++) { var t = i / n, px = x1 + (x2 - x1) * t, py = y1 + (y2 - y1) * t; d += 'M' + px.toFixed(1) + ',' + py.toFixed(1) + ' v' + (-h) + ' '; }
-    return out + '<path d="' + d + '" stroke="' + C.woodD + '" stroke-width="1" fill="none"/>';
-  }
-  function house(x, y, s, snowy) {
-    return g(x, y, s, '<path d="M-14,0 V-13 H14 V0 Z" fill="' + C.wall + '" ' + SK + '/><path d="M-18,-12 L0,-27 L18,-12 Z" fill="' + (snowy ? C.snow : C.thatch) + '" ' + SK + '/><path d="M-3,0 V-8 H3 V0" fill="' + C.woodD + '" ' + SK + '/>');
-  }
-  function fort(x, y, s, snowy) {
-    var inner = '';
-    inner += '<path d="M-130,0 L0,-78 L130,0 Z" fill="' + (snowy ? C.snow : C.sand) + '" ' + SK + '/>';
-    inner += palisade(-130, 0, 0, -78, 20, C.woodD) + palisade(0, -78, 130, 0, 20, C.woodD);
-    inner += '<circle cx="0" cy="-86" r="13" fill="' + C.wood + '" ' + SK + '/>';
-    inner += house(-34, -22, 1, snowy) + house(36, -24, 1, snowy) + house(0, -44, 0.9, snowy);
-    inner += '<path d="M0,-86 V-128" ' + SK + '/><path d="M0,-128 h20 v12 h-20 z" fill="#fff" ' + SK + ' stroke-width="1"/><path d="M10,-128 v12 M0,-122 h20" stroke="' + C.red + '" stroke-width="2.6"/>';
-    inner += palisade(-130, 0, 130, 0, 22, C.wood);
-    inner += '<path d="M-9,0 V-17 H9 V0 Z" fill="' + C.woodD + '" ' + SK + '/>';
-    inner += '<path d="M-143,2 a14,12 0 0 1 28,0 Z M115,2 a14,12 0 0 1 28,0 Z" fill="' + C.wood + '" ' + SK + '/>';
-    if (snowy) inner += '<path d="M-130,-22 H130" stroke="' + C.snow + '" stroke-width="3" stroke-linecap="round"/>';
-    return g(x, y, s, inner);
-  }
-  function tent(x, y, s) { return g(x, y, s, '<path d="M-16,0 L0,-22 L16,0 Z" fill="' + C.sail + '" ' + SK + '/><path d="M0,-22 L0,0" ' + SK + '/><path d="M0,0 L-4,-10 L4,-10 Z" fill="' + C.woodD + '"/>'); }
-  function yehakin(x, y, s, long) {
-    var w = long ? 62 : 34;
-    var inner = '<path d="M' + (-w) + ',0 V-18 Q' + (-w) + ',-42 ' + (-w + 26) + ',-42 H' + (w - 26) + ' Q' + w + ',-42 ' + w + ',-18 V0 Z" fill="' + C.mat + '" ' + SK + '/>';
-    inner += '<path d="M' + (-w) + ',-12 H' + w + ' M' + (-w + 1) + ',-24 H' + (w - 1) + ' M' + (-w + 10) + ',-34 H' + (w - 10) + '" stroke="' + C.tan + '" stroke-width="1.6" fill="none"/>';
-    inner += '<path d="M-6,0 V-13 Q0,-19 6,-13 V0 Z" fill="' + C.woodD + '" ' + SK + '/>';
-    return g(x, y, s, inner);
-  }
-  function person(x, y, s, o) {
-    o = o || {};
-    var tunic = o.tunic || C.deep;
-    var inner = '<path d="M-3,-6 L-4,6 M3,-6 L4,6" stroke="' + C.ink + '" stroke-width="2.6" stroke-linecap="round"/>';
-    inner += '<path d="M-5,-20 H5 L6,-5 H-6 Z" fill="' + tunic + '" ' + SK + ' stroke-width="1.2"/>';
-    inner += '<circle cx="0" cy="-25" r="4.2" fill="' + C.ink + '"/>';
-    if (o.hat) inner += '<path d="M-7,-27 H7 M-3.5,-27 V-32 H3.5 V-27" fill="' + C.ink + '" stroke="' + C.ink + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
-    if (o.axe) inner += '<path d="M5,-16 L15,-28" ' + SK + '/><path d="M13,-31 l6,2 l-3,5 z" fill="' + C.stone + '" ' + SK + ' stroke-width="1"/>';
-    if (o.carry) inner += '<path d="M-14,-22 H14" stroke="' + C.tan + '" stroke-width="5" stroke-linecap="round"/>';
-    if (o.sit) inner = '<path d="M-3,-2 L6,-2 L8,6" fill="none" stroke="' + C.ink + '" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M-5,-16 H5 L6,-1 H-6 Z" fill="' + tunic + '" ' + SK + ' stroke-width="1.2"/><circle cx="0" cy="-21" r="4.2" fill="' + C.ink + '"/>' + (o.hat ? '<path d="M-7,-23 H7 M-3.5,-23 V-28 H3.5 V-23" fill="' + C.ink + '" stroke="' + C.ink + '" stroke-width="2" stroke-linejoin="round"/>' : '');
-    return g(x, y, s || 1, inner);
-  }
-  function crowd(seed, x0, x1, y0, y1, n, opts) {
-    var r = rng(seed), pts = [], out = '';
-    for (var i = 0; i < n; i++) pts.push([x0 + r() * (x1 - x0), y0 + r() * (y1 - y0), r()]);
-    pts.sort(function (a, b) { return a[1] - b[1]; });
-    pts.forEach(function (p) { out += person(p[0], p[1], 0.9, { hat: opts.hat && p[2] > 0.25, tunic: p[2] > 0.6 ? (opts.alt || C.copper) : (opts.tunic || C.deep) }); });
-    return out;
-  }
-  function corn(x, y, cols, rows, dx, dy, withered) {
-    var out = '', col = withered ? C.tan : C.leaf;
-    for (var j = 0; j < rows; j++) for (var i = 0; i < cols; i++) {
-      var px = x + i * dx + (j % 2) * dx / 2, py = y + j * dy, hh = withered ? 14 : 24;
-      out += '<path d="M' + px + ',' + py + ' v' + (-hh) + ' M' + px + ',' + (py - hh * 0.5) + ' q-7,-3 -9,' + (withered ? 5 : -5) + ' M' + px + ',' + (py - hh * 0.7) + ' q7,-3 9,' + (withered ? 6 : -4) + '" fill="none" stroke="' + col + '" stroke-width="2" stroke-linecap="round"/>';
-      if (!withered) out += '<ellipse cx="' + (px + 3) + '" cy="' + (py - hh * 0.55) + '" rx="2.4" ry="5" fill="' + C.corn + '" stroke="' + C.ink + '" stroke-width=".8"/>';
-    }
-    return out;
-  }
-  function tobacco(x, y, cols, rows, dx, dy) {
-    var out = '';
-    for (var j = 0; j < rows; j++) for (var i = 0; i < cols; i++) {
-      var px = x + i * dx + (j % 2) * dx / 2, py = y + j * dy;
-      out += g(px, py, 1, '<ellipse cx="-7" cy="-6" rx="8" ry="3.6" transform="rotate(-28 -7 -6)" fill="' + C.leaf + '" ' + SK + ' stroke-width="1"/><ellipse cx="7" cy="-6" rx="8" ry="3.6" transform="rotate(28 7 -6)" fill="' + C.leaf + '" ' + SK + ' stroke-width="1"/><ellipse cx="0" cy="-13" rx="4" ry="9" fill="' + C.leafD + '" ' + SK + ' stroke-width="1"/>');
-    }
-    return out;
-  }
-  function barrel(x, y, s) { return g(x, y, s || 1, '<path d="M-7,0 Q-10,-9 -7,-18 H7 Q10,-9 7,0 Z" fill="' + C.tan + '" ' + SK + '/><path d="M-8.5,-5 H8.5 M-8.5,-13 H8.5" stroke="' + C.woodD + '" stroke-width="1.6"/>'); }
-  function mound(x, y, s, glitter) {
-    var inner = '<path d="M-40,0 Q-22,-34 0,-30 Q24,-36 42,0 Z" fill="' + (glitter ? C.mat : C.mud) + '" ' + SK + '/>';
-    if (glitter) [[-16, -14], [4, -22], [20, -10], [-2, -8], [-28, -5]].forEach(function (p) { inner += star(p[0], p[1], 5); });
-    return g(x, y, s || 1, inner);
-  }
-  function star(x, y, r) { return '<path d="M' + x + ',' + (y - r) + ' L' + (x + r * 0.28) + ',' + (y - r * 0.28) + ' L' + (x + r) + ',' + y + ' L' + (x + r * 0.28) + ',' + (y + r * 0.28) + ' L' + x + ',' + (y + r) + ' L' + (x - r * 0.28) + ',' + (y + r * 0.28) + ' L' + (x - r) + ',' + y + ' L' + (x - r * 0.28) + ',' + (y - r * 0.28) + ' Z" fill="' + C.corn + '" stroke="' + C.ink + '" stroke-width=".8"/>'; }
-  function sun(x, y, r) {
-    var d = '';
-    for (var i = 0; i < 12; i++) { var a = i * Math.PI / 6; d += 'M' + (x + Math.cos(a) * (r + 6)).toFixed(1) + ',' + (y + Math.sin(a) * (r + 6)).toFixed(1) + ' L' + (x + Math.cos(a) * (r + 18)).toFixed(1) + ',' + (y + Math.sin(a) * (r + 18)).toFixed(1) + ' '; }
-    return '<path d="' + d + '" stroke="' + C.tan + '" stroke-width="3" stroke-linecap="round"/><circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + C.corn + '" ' + SK + '/>';
-  }
-  function reeds(x, y, n, seed) {
-    var r = rng(seed), out = '';
-    for (var i = 0; i < n; i++) { var px = x + i * 7 + r() * 4, hh = 16 + r() * 16, lean = (r() - 0.5) * 8; out += '<path d="M' + px.toFixed(1) + ',' + y + ' q' + (lean / 2).toFixed(1) + ',' + (-hh / 2).toFixed(1) + ' ' + lean.toFixed(1) + ',' + (-hh).toFixed(1) + '" fill="none" stroke="' + C.leafD + '" stroke-width="1.8" stroke-linecap="round"/>'; if (i % 3 === 0) out += '<ellipse cx="' + (px + lean).toFixed(1) + '" cy="' + (y - hh - 4).toFixed(1) + '" rx="2" ry="5" fill="' + C.woodD + '"/>'; }
-    return out;
-  }
-  function flakes(seed, n) { var r = rng(seed), out = ''; for (var i = 0; i < n; i++) out += '<circle cx="' + (r() * W).toFixed(0) + '" cy="' + (r() * H).toFixed(0) + '" r="' + (1 + r() * 1.6).toFixed(1) + '" fill="#fff" stroke="' + C.stone + '" stroke-width=".5"/>'; return out; }
-  function cracks(seed, y0, n) { var r = rng(seed), out = ''; for (var i = 0; i < n; i++) { var x = r() * W, y = y0 + r() * (H - y0 - 10); out += '<path d="M' + x.toFixed(0) + ',' + y.toFixed(0) + ' l' + (8 + r() * 10).toFixed(0) + ',' + (r() * 8 - 4).toFixed(0) + ' l' + (4 + r() * 8).toFixed(0) + ',' + (4 + r() * 6).toFixed(0) + '" fill="none" stroke="' + C.tan + '" stroke-width="1.3" opacity=".8"/>'; } return out; }
-  function compass(x, y, r) {
-    var out = '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="' + C.wall + '" ' + SK + '/>';
-    for (var i = 0; i < 8; i++) { var a = i * Math.PI / 4, long = i % 2 === 0 ? r * 1.25 : r * 0.7, a1 = a - 0.22, a2 = a + 0.22; out += '<path d="M' + x + ',' + y + ' L' + (x + Math.sin(a1) * r * 0.3).toFixed(1) + ',' + (y - Math.cos(a1) * r * 0.3).toFixed(1) + ' L' + (x + Math.sin(a) * long).toFixed(1) + ',' + (y - Math.cos(a) * long).toFixed(1) + ' L' + (x + Math.sin(a2) * r * 0.3).toFixed(1) + ',' + (y - Math.cos(a2) * r * 0.3).toFixed(1) + ' Z" fill="' + (i % 2 === 0 ? C.ink : C.copper) + '" stroke="' + C.ink + '" stroke-width=".8"/>'; }
-    return out + '<text x="' + x + '" y="' + (y - r * 1.4) + '" text-anchor="middle" font-family="Zilla Slab, Rockwell, Georgia, serif" font-size="15" fill="' + C.ink + '">N</text>';
-  }
-  function label(x, y, text, size, italic, rot) { return '<text x="' + x + '" y="' + y + '" font-family="Zilla Slab, Rockwell, Georgia, serif" font-size="' + (size || 15) + '"' + (italic ? ' font-style="italic"' : '') + (rot ? ' transform="rotate(' + rot + ' ' + x + ' ' + y + ')"' : '') + ' font-weight="600" fill="' + C.ink + '">' + text + '</text>'; }
-  function town(x, y) { return '<circle cx="' + x + '" cy="' + y + '" r="5" fill="' + C.wall + '" stroke="' + C.ink + '" stroke-width="1.6"/><circle cx="' + x + '" cy="' + y + '" r="1.4" fill="' + C.ink + '"/>'; }
-  function marker(x, y, letter) { return '<circle cx="' + x + '" cy="' + y + '" r="14" fill="' + C.copper + '" stroke="' + C.ink + '" stroke-width="2"/><text x="' + x + '" y="' + (y + 6) + '" text-anchor="middle" font-family="Zilla Slab, Rockwell, Georgia, serif" font-size="19" font-weight="700" fill="#fff">' + letter + '</text>'; }
-
-  var SCENES = {
-    title: function () {
-      return sky(C.dawn, 120) + sun(650, 78, 26) + farShore(108, 3) + river(120, 300, 11) +
-        ship(250, 232, 1.25) + ship(470, 196, 0.85) + ship(610, 176, 0.6) +
-        land(300, 14, C.land) + reeds(30, 304, 12, 4) + reeds(690, 300, 10, 9) + tree(742, 318, 1.1) + tufts(5, 312, 336, 26);
-    },
-    map: function () {
-      var r = rng(21), out = rect(0, 0, W, H, C.land);
-      for (var i = 0; i < 46; i++) { var x = r() * 660, y = r() * H; out += g(x, y, 0.42, '<circle cx="-7" cy="-9" r="9" fill="' + C.land2 + '" stroke="' + C.leaf + '" stroke-width="2"/><circle cx="7" cy="-9" r="9" fill="' + C.land2 + '" stroke="' + C.leaf + '" stroke-width="2"/><circle cx="0" cy="-19" r="9" fill="' + C.land2 + '" stroke="' + C.leaf + '" stroke-width="2"/>'); }
-      var bay = 'M800,0 L700,0 Q660,60 688,112 Q700,150 676,196 Q650,262 690,340 L800,340 Z';
-      var riv = 'M700,158 C640,150 610,188 552,182 S462,150 404,190 S300,236 236,206 S110,176 -10,214';
-      out += '<path d="' + bay + '" fill="' + C.water + '" ' + SK + ' stroke-width="2"/>';
-      out += '<path d="' + riv + '" fill="none" stroke="' + C.ink + '" stroke-width="38" stroke-linecap="round"/>';
-      out += '<path d="M706,158 C660,150 640,170 600,176" fill="none" stroke="' + C.ink + '" stroke-width="52" stroke-linecap="round"/>';
-      out += '<path d="M466,166 Q452,130 470,96 T456,40" fill="none" stroke="' + C.ink + '" stroke-width="9" stroke-linecap="round"/>';
-      out += '<path d="' + riv + '" fill="none" stroke="' + C.water + '" stroke-width="34" stroke-linecap="round"/>';
-      out += '<path d="M706,158 C660,150 640,170 600,176" fill="none" stroke="' + C.water + '" stroke-width="48" stroke-linecap="round"/>';
-      out += '<path d="M466,166 Q452,130 470,96 T456,40" fill="none" stroke="' + C.water + '" stroke-width="5.5" stroke-linecap="round"/>';
-      out += rect(690, 126, 52, 66, C.water);
-      var rw = rng(8);
-      for (var k = 0; k < 40; k++) { var wx = 700 + rw() * 84, wy = 10 + rw() * 320; out += '<path d="M' + wx.toFixed(0) + ',' + wy.toFixed(0) + ' q4,-3 8,0 t8,0" fill="none" stroke="' + C.deep + '" stroke-width="1.2" opacity=".55"/>'; }
-      out += '<path d="M292,196 q22,-20 46,-6 q16,10 0,20 q-26,12 -46,0 q-10,-6 0,-14 Z" fill="' + C.land2 + '" ' + SK + '/>';
-      [[560, 222], [470, 232], [386, 150], [250, 250], [170, 160], [90, 236], [596, 128], [330, 262], [150, 96], [520, 70]].forEach(function (p) { out += town(p[0], p[1]); });
-      out += marker(654, 122, 'A') + marker(316, 204, 'B') + marker(498, 146, 'C');
-      out += label(752, 290, 'Chesapeake Bay', 17, true, -90);
-      out += label(96, 252, 'the river', 15, true, -4);
-      out += compass(60, 62, 24);
-      out += '<rect x="14" y="296" width="196" height="32" fill="' + C.wall + '" ' + SK + '/>' + town(32, 312) + label(46, 317, 'a Powhatan town', 15);
-      out += ship(748, 86, 0.32);
-      return out;
-    },
-    landing: function () {
-      return sky(C.sky, 100) + farShore(92, 6) + river(104, 176, 12) + ship(560, 160, 0.5, true) + ship(660, 150, 0.36, true) + ship(480, 148, 0.3, true) +
-        land(178, 10, C.land) + tufts(7, 200, 330, 40) +
-        tree(58, 250, 1.5) + tree(120, 230, 1.1) + pine(742, 250, 1.5) + pine(690, 226, 1.1) +
-        tent(250, 250, 1.5) + tent(330, 234, 1.2) + tent(420, 262, 1.6) +
-        stump(190, 292) + stump(520, 300) + stump(600, 250) + palisade(520, 232, 640, 222, 16) +
-        person(300, 300, 1.5, { hat: true, axe: true }) + person(480, 300, 1.4, { hat: true, carry: true, tunic: C.copper }) + person(580, 290, 1.3, { hat: true }) + barrel(370, 300, 1.2) + barrel(392, 304, 1.2);
-    },
-    fort: function () {
-      return sky(C.sky, 84) + farShore(76, 14) + river(88, 132, 15) + ship(120, 122, 0.36, true) +
-        land(134, 8, C.land) + tufts(9, 150, 332, 46) + tree(60, 300, 1.5) + pine(744, 290, 1.5) +
-        fort(400, 268, 1.45) +
-        person(160, 316, 1.4, { hat: true, axe: true }) + person(214, 322, 1.4, { hat: true, carry: true, tunic: C.copper }) +
-        person(640, 320, 1.4, { hat: true, sit: true, tunic: C.copper }) + person(676, 324, 1.4, { hat: true, sit: true }) + stump(120, 322);
-    },
-    summer: function () {
-      return sky(C.dawn, 110) + sun(150, 62, 30) + farShore(102, 2, C.land2) + river(114, 190, 31) +
-        '<path d="M0,190 Q200,176 400,188 T800,180 L800,230 L0,236 Z" fill="' + C.mud + '" ' + SK + '/>' +
-        land(226, 8, C.dry) + reeds(40, 226, 14, 3) + reeds(560, 222, 16, 5) + cracks(4, 244, 22) +
-        fort(590, 300, 0.7) + tent(150, 300, 1.3) + tent(230, 290, 1.1) +
-        person(360, 214, 1.3, { hat: true }) + barrel(388, 216, 1.1) + person(300, 310, 1.3, { hat: true, sit: true, tunic: C.copper });
-    },
-    town: function () {
-      return sky(C.sky, 90) + farShore(82, 18) + river(94, 160, 22) + boat(180, 150, 1.2, true) + canoe(560, 140, 1.1) +
-        land(162, 10, C.land) + tufts(12, 180, 332, 30) + tree(50, 240, 1.4) + tree(750, 250, 1.5) + tree(700, 222, 1) +
-        yehakin(250, 250, 1.5) + yehakin(390, 228, 1.2) + yehakin(140, 300, 1.4, true) +
-        corn(470, 290, 9, 3, 30, 18) +
-        person(330, 300, 1.3, { tunic: C.tan }) + person(366, 306, 1.3, { tunic: C.tan }) + person(420, 312, 1.0, { tunic: C.tan }) +
-        '<ellipse cx="300" cy="314" rx="12" ry="5" fill="' + C.corn + '" ' + SK + '/>';
-    },
-    gold: function () {
-      return sky(C.sky, 80) + farShore(72, 25) + river(84, 220, 26) + ship(590, 214, 1.3, true) +
-        land(222, 10, C.land) + tufts(13, 240, 332, 26) + tree(60, 290, 1.5) +
-        mound(250, 300, 1.5, true) + mound(120, 322, 0.8, true) +
-        person(340, 310, 1.5, { hat: true, axe: true }) + person(180, 318, 1.4, { hat: true, tunic: C.copper, axe: true }) + person(430, 300, 1.4, { hat: true, carry: true }) +
-        barrel(480, 292, 1.3) + barrel(506, 296, 1.3) + barrel(492, 276, 1.3) + '<path d="M520,270 L560,226" ' + SK + ' stroke-width="4"/>';
-    },
-    meeting: function () {
-      return sky(C.sky, 84) + farShore(76, 30) + river(88, 140, 33) + boat(660, 132, 1.1, true) +
-        land(142, 8, C.land) + tufts(14, 160, 332, 30) + pine(40, 250, 1.6, false) + tree(760, 240, 1.4) +
-        yehakin(400, 232, 2.1, true) + yehakin(160, 226, 1.2) + yehakin(650, 222, 1.1) +
-        crowd(41, 150, 330, 286, 326, 6, { tunic: C.tan, alt: C.corn }) +
-        crowd(42, 470, 640, 286, 326, 5, { hat: true }) +
-        person(378, 318, 1.5, { tunic: C.tan }) + person(424, 318, 1.25, { hat: true, tunic: C.copper });
-    },
-    drought: function () {
-      return sky(C.dawn, 110) + sun(640, 64, 34) + farShore(102, 35, C.land2) + river(114, 150, 36) +
-        '<path d="M0,150 Q200,140 400,150 T800,144 L800,176 L0,180 Z" fill="' + C.mud + '" ' + SK + '/>' +
-        land(172, 8, C.dry) + cracks(6, 190, 40) + corn(110, 262, 12, 3, 52, 26, true) + bare(60, 250, 1.4) + bare(752, 262, 1.5) +
-        person(300, 312, 1.4, { hat: true }) + person(520, 300, 1.3, { tunic: C.tan });
-    },
-    autumn: function () {
-      return sky(C.gray, 84) + farShore(76, 44, C.tanL) + river(88, 130, 45) + ship(120, 120, 0.36, true) + ship(200, 116, 0.28, true) +
-        land(132, 8, C.dry) + tufts(15, 150, 332, 30, C.tan) + bare(56, 300, 1.6) + tree(744, 300, 1.4, C.tan) + tree(700, 270, 1, C.corn) +
-        fort(400, 250, 1.3) + crowd(51, 120, 690, 286, 328, 26, { hat: true });
-    },
-    empty: function () {
-      return sky(C.gray, 84) + farShore(76, 44, C.tanL) + river(88, 130, 45) +
-        land(132, 8, C.dry) + tufts(15, 150, 332, 30, C.tan) + bare(56, 300, 1.6) + bare(150, 262, 1.1) + bare(744, 300, 1.5) +
-        fort(400, 258, 1.35) + stump(250, 318) + stump(600, 312);
-    },
-    winter: function () {
-      return sky(C.gray, 84) + farShore(76, 52, '#D9F5F3') + river(88, 130, 53, C.sky) +
-        land(132, 8, C.snow) + bare(70, 300, 1.7) + bare(150, 250, 1.1) + pine(730, 300, 1.7, true) + pine(676, 262, 1.1, true) +
-        fort(400, 262, 1.4, true) + person(300, 318, 1.3, { hat: true }) + flakes(54, 90);
-    },
-    tobacco: function () {
-      return sky(C.sky, 84) + farShore(76, 61) + river(88, 150, 62) + ship(640, 142, 0.6, true) +
-        land(152, 8, C.land) + '<path d="M560,150 h70 v10 h-70 z" fill="' + C.wood + '" ' + SK + '/>' + barrel(576, 152, 1) + barrel(596, 152, 1) + barrel(614, 152, 1) +
-        house(120, 210, 1.7) + house(210, 200, 1.2) + tree(40, 230, 1.2) +
-        tobacco(70, 258, 15, 4, 48, 24) + person(690, 250, 1.3, { hat: true }) + person(400, 208, 1.1, { hat: true, tunic: C.copper });
-    },
-    spring: function () {
-      return sky(C.sky, 84) + farShore(76, 71) + river(88, 132, 72) + ship(140, 124, 0.5) + ship(250, 118, 0.36) +
-        land(134, 8, C.land) + tufts(16, 150, 332, 50) + tree(60, 300, 1.5) + tree(744, 296, 1.5) + tree(690, 262, 1) +
-        fort(400, 266, 1.4) + crowd(73, 150, 660, 296, 326, 8, { hat: true });
-    }
-  };
-
-  function draw(name) {
-    var fn = SCENES[name] || SCENES.title;
-    return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">' + fn() + '</svg>';
-  }
-  return { draw: draw, names: Object.keys(SCENES) };
 })();
 
 /* The Virginia Venture: the page itself. */
@@ -1696,7 +1405,11 @@ var ART = (function () {
     if (calm || !el.animate) return;
     el.animate([{ opacity: 0, transform: 'translateY(' + (rise || 0) + 'px)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
   }
-  function setArt(name, cap) { $('art').innerHTML = ART.draw(name); $('cap').textContent = cap; fadeIn($('art')); }
+  var PIC = {
+    ships: { img: 'sources/story-ships.jpg', alt: 'Three wooden sailing ships tied to a dock on a river.', cap: 'Full-size copies of the Susan Constant, the Godspeed, and the Discovery at Jamestown Settlement in Virginia today.', credit: 'Photo by Carol M. Highsmith. Library of Congress.' },
+    burial: { img: 'sources/scene-burial.jpg', alt: 'A painting of settlers burying the dead outside the fort in winter.', cap: 'Settlers bury the dead during the Starving Time, the winter of 1609 to 1610, as painted by John Heinly.', credit: 'Public domain, via Wikimedia Commons.' },
+    gates: { img: 'sources/scene-gates.jpg', alt: 'An old drawing of ships arriving at a small fort on a river.', cap: 'Sir Thomas Gates reaches Jamestown in May 1610 and finds about 60 starving survivors, as drawn in a history book in 1901.', credit: 'Public domain (CC0), via Wikimedia Commons.' }
+  };
   function setPhoto(ch) {
     fadeIn($('art'));
     $('art').innerHTML = '<img class="photo" src="' + ch.img + '" alt="' + esc(ch.alt) + '">';
@@ -1757,6 +1470,13 @@ var ART = (function () {
     h += '<div class="m-look"><span class="m-label">Before you choose</span><p>' + c.think + '</p></div>';
     return h + footer(d.url, d.host) + '</div>';
   }
+  function realHtml(i) {
+    var r = VV.ROUNDS[i], e = s.log.filter(function (x) { return x.round === i; })[0], p = r.pic;
+    return '<div class="m-body"><span class="kicker">Decision ' + (i + 1) + ' · ' + r.when + '</span><h2 id="m-title">' + r.title + '</h2>' +
+      (e ? '<p class="m-meta"><b>You chose:</b> ' + e.label + '<br><b>The real settlers:</b> ' + r.realShort + '</p>' : '') +
+      '<div class="m-plain"><span class="m-label">What really happened</span><p>' + r.brief + '</p></div>' +
+      '<figure class="m-img short"><img src="' + p.img + '" alt="' + esc(p.alt) + '"><figcaption>' + esc(p.cap) + ' ' + esc(p.credit) + '</figcaption></figure></div>';
+  }
   function openModal(html, from) {
     opener = from || null;
     $('m-body').innerHTML = html;
@@ -1808,7 +1528,7 @@ var ART = (function () {
   function showTitle() {
     resetGame();
     setWhen('1607');
-    setArt('title', 'The Susan Constant, the Godspeed, and the Discovery reach Virginia.');
+    setPhoto(PIC.ships);
     show(
       '<div class="welcome">' +
       '<span class="kicker">A Jamestown decision game</span>' +
@@ -1829,12 +1549,17 @@ var ART = (function () {
     var html = '<span class="kicker">Chapter ' + (i + 1) + ' of ' + VV.STORY.length + '</span>' +
       '<h2 class="round-title">' + ch.title + '</h2>' +
       '<div class="prose story">' + paras(ch.paras) + '</div>';
-    if (ch.people) html += '<ul class="cast">' + ch.people.map(function (p) { return '<li><b>' + p[0] + '</b> ' + p[1] + '</li>'; }).join('') + '</ul>';
+    if (ch.people) html += '<ul class="cast">' + ch.people.map(function (p) {
+      var face = p[2] ? '<img class="face" src="' + p[2] + '" alt="' + esc(p[0]) + '">' :
+        '<span class="face none" aria-hidden="true">' + p[0].split(' ').map(function (w) { return w[0]; }).filter(function (c, k, a) { return k === 0 || k === a.length - 1; }).join('') + '</span>';
+      return '<li>' + face + '<div><b>' + p[0] + '</b> ' + p[1] + '<span class="credit">' + esc(p[3]) + '</span></div></li>';
+    }).join('') + '</ul>';
     if (ch.after) html += '<div class="prose story">' + paras(ch.after) + '</div>';
     html += '<div class="row">' + (i > 0 ? '<button class="go quiet" id="back" type="button">Back</button>' : '') +
       '<button class="go" id="fwd" type="button">' + (last ? 'Watch the ships arrive' : 'Next chapter') + '</button></div>' +
       '<div class="dots" aria-hidden="true">' + VV.STORY.map(function (c, k) { return '<span' + (k === i ? ' class="on"' : k < i ? ' class="past"' : '') + '></span>'; }).join('') + '</div>';
     show(html);
+    stage.querySelectorAll('.cast img').forEach(function (im) { im.addEventListener('error', function () { var n = document.createElement('span'); n.className = 'face none'; n.setAttribute('aria-hidden', 'true'); n.textContent = im.alt.split(' ').map(function (w) { return w[0]; }).join(''); im.replaceWith(n); }); });
     if (i > 0) $('back').addEventListener('click', function () { showChapter(i - 1); });
     $('fwd').addEventListener('click', function () {
       if (last) { storyDone = true; showClip(); } else showChapter(i + 1);
@@ -1853,19 +1578,12 @@ var ART = (function () {
     ['Movie or history?', 'This movie was made almost 400 years after the ships landed. Which parts could the filmmakers know for sure? Which parts did they have to imagine?', 'var(--edu-green)'],
     ['Wonder', 'What do you wonder now? Write one question you want answered as you play.', 'var(--edu-tech)']
   ];
-  var clip = { notice: '', wonder: '', answers: ['', '', '', '', '', ''] };
   function setVideo() {
     if ($('art').querySelector('iframe')) return; // keep it playing between the two clip screens
     $('art').innerHTML = '<div class="video"><iframe src="https://drive.google.com/file/d/' + CLIP_ID + '/preview" title="The opening scene of The New World" allow="autoplay; fullscreen" allowfullscreen></iframe></div>';
     $('cap').innerHTML = 'The opening scene of <i>The New World</i> (2005). Press play, then use the full-screen button.' +
       '<span class="credit">Video won’t play? <a href="' + CLIP_VIEW + '" target="_blank" rel="noopener">Open it in Google Drive</a>.</span>';
     fadeIn($('art'));
-  }
-  function saveClip() {
-    var n = $('c-notice'), w = $('c-wonder');
-    if (n) clip.notice = n.value.trim();
-    if (w) clip.wonder = w.value.trim();
-    CLIP_QS.forEach(function (q, k) { var a = $('c-q' + k); if (a) clip.answers[k] = a.value.trim(); });
   }
   function showClip() {
     document.body.classList.remove('is-welcome');
@@ -1878,49 +1596,38 @@ var ART = (function () {
       '<div class="nw">' +
       '<div class="nwcard"><div class="qhead"><span class="badge" style="background:var(--edu-sunshine)">!</span><h3>What do you notice?</h3></div>' +
       '<p>Sights, sounds, people, and objects. What catches your eye? What do you hear?</p>' +
-      '<label class="sr" for="c-notice">What I notice</label><textarea class="note" id="c-notice" placeholder="I notice..."></textarea></div>' +
+      '</div>' +
       '<div class="nwcard"><div class="qhead"><span class="badge" style="background:var(--edu-tech)">?</span><h3>What do you wonder?</h3></div>' +
       '<p>What questions pop into your head? What do you want to find out?</p>' +
-      '<label class="sr" for="c-wonder">What I wonder</label><textarea class="note" id="c-wonder" placeholder="I wonder..."></textarea></div>' +
       '</div>' +
-      '<p class="cliplink">Your notes go on your final report.</p>' +
+      '</div>' +
       '<div class="row"><button class="go quiet" id="back" type="button">Back</button><button class="go" id="fwd" type="button">After the clip</button>' +
       '<button class="go quiet" id="skipclip" type="button">Skip the clip</button></div>');
-    $('c-notice').value = clip.notice; $('c-wonder').value = clip.wonder;
-    $('back').addEventListener('click', function () { saveClip(); showChapter(VV.STORY.length - 1); });
-    $('fwd').addEventListener('click', function () { saveClip(); showClipTalk(); });
-    $('skipclip').addEventListener('click', function () { saveClip(); showStart(); });
+    $('back').addEventListener('click', function () { showChapter(VV.STORY.length - 1); });
+    $('fwd').addEventListener('click', function () { showClipTalk(); });
+    $('skipclip').addEventListener('click', function () { showStart(); });
   }
   function showClipTalk() {
     setWhen('April 1607'); setVideo();
     var cards = CLIP_QS.map(function (q, k) {
       return '<li class="qcard"><div class="qhead"><span class="badge" style="background:' + q[2] + '">' + (k + 1) + '</span><h3>' + q[0] + '</h3></div>' +
-        '<p>' + q[1] + '</p><label class="sr" for="c-q' + k + '">Your answer to question ' + (k + 1) + '</label>' +
-        '<textarea class="note" id="c-q' + k + '" placeholder="Talk first, then jot an idea (optional)"></textarea></li>';
+        '<p>' + q[1] + '</p></li>';
     }).join('');
     show(
       '<span class="kicker">After the clip</span>' +
       '<h2 class="round-title">Turn and talk</h2>' +
-      '<div class="prose story"><p>Talk about these with a partner. You can watch the clip again while you talk. Writing an answer is up to you.</p></div>' +
+      '<div class="prose story"><p>Talk about these with a partner. You can watch the clip again while you talk.</p></div>' +
       '<ol class="qlist">' + cards + '</ol>' +
       '<div class="row"><button class="go quiet" id="back" type="button">Back</button><button class="go" id="fwd" type="button">Take command</button></div>');
-    CLIP_QS.forEach(function (q, k) { $('c-q' + k).value = clip.answers[k]; });
-    $('back').addEventListener('click', function () { saveClip(); showClip(); });
-    $('fwd').addEventListener('click', function () { saveClip(); showStart(); });
-  }
-  function clipNotes() {
-    var out = [];
-    if (clip.notice) out.push(['I noticed', clip.notice]);
-    if (clip.wonder) out.push(['I wondered', clip.wonder]);
-    CLIP_QS.forEach(function (q, k) { if (clip.answers[k]) out.push([q[0] + ': ' + q[1], clip.answers[k]]); });
-    return out;
+    $('back').addEventListener('click', function () { showClip(); });
+    $('fwd').addEventListener('click', function () { showStart(); });
   }
 
   /* ---------- setup ---------- */
   function showStart() {
     resetGame();
     setWhen('May 1607');
-    setArt('title', 'The Susan Constant, the Godspeed, and the Discovery sail up the river.');
+    setPhoto(PIC.ships);
     show(
       '<div class="welcome">' +
       '<span class="kicker">Your turn</span>' +
@@ -1943,7 +1650,7 @@ var ART = (function () {
       '</div>',
       'h1');
     $('begin').addEventListener('click', function () {
-      s.name = $('leader').value.trim(); s.clip = clipNotes();
+      s.name = $('leader').value.trim();
       document.body.classList.remove('is-welcome');
       status.hidden = false; renderStatus(); showRound();
     });
@@ -1953,7 +1660,7 @@ var ART = (function () {
   function showRound() {
     var r = VV.ROUNDS[s.i], news = null;
     if (VV.NEWS[s.i] && !newsShown[s.i]) { news = VV.applyNews(s, s.i); newsShown[s.i] = true; }
-    renderStatus(); setWhen(r.when); setArt(r.art, r.cap);
+    renderStatus(); setWhen(r.when); setPhoto(r.pic);
     var html = '';
     if (news) {
       var extra = news.bonus > 2 ? ' The Company is pleased with you, so the ship carries extra food.' : news.bonus < -2 ? ' The Company is unhappy with you, so the ship carries less food than you hoped.' : '';
@@ -2030,7 +1737,7 @@ var ART = (function () {
   /* ---------- the winter ---------- */
   function showWinter() {
     var w = VV.runWinter(s);
-    renderStatus(); setWhen('Winter 1609 to 1610'); setArt('winter', 'The fort in the winter of 1609 to 1610.');
+    renderStatus(); setWhen('Winter 1609 to 1610'); setPhoto(PIC.burial);
     var story = s.lost
       ? 'The food is gone before the first snow melts, and no town will trade with you. One by one, the settlers die. When spring comes, the fort is silent.'
       : w.rate >= 0.6
@@ -2064,16 +1771,17 @@ var ART = (function () {
     var v = VV.verdicts(s), head = VV.headline(s), lost = !!s.lost, t = VV.tally(s), surv = VV.survival(s);
     document.body.classList.add('is-report');
     setWhen(lost ? 'The end' : 'Looking back');
-    setArt(lost ? (s.lost === 'winter' ? 'winter' : 'empty') : 'spring', lost ? 'An empty fort.' : 'The fort, with ships coming up the river.');
+    setPhoto(lost ? PIC.burial : PIC.gates);
     var why = lost
       ? OVER[s.lost] + ' The simulation ended at decision ' + s.log.length + ' of 10. When the next ship from England arrives, it will find an empty fort. People will call it another lost colony, like Roanoke.'
       : '';
     var cards = s.log.map(function (e) {
       var r = VV.ROUNDS[e.round], k = VV.matchKind(e.round, e.key);
-      return '<li class="cmp ' + k + '"><div class="cmp-head"><b>' + (e.round + 1) + '. ' + r.title + '</b><span>' + SYM_WORDS[k] + '</span></div>' +
+      return '<li class="cmp ' + k + '" data-real="' + e.round + '" role="button" tabindex="0" aria-label="' + esc(r.title) + ': see what really happened"><div class="cmp-head"><b>' + (e.round + 1) + '. ' + r.title + '</b><span>' + SYM_WORDS[k] + '</span></div>' +
         '<div class="pair"><div class="side you"><small>You</small>' + e.label + '</div>' +
         '<span class="sym" aria-hidden="true">' + SYM[k] + '</span>' +
-        '<div class="side real"><small>The real settlers</small>' + r.realShort + '</div></div></li>';
+        '<div class="side real"><small>The real settlers</small>' + r.realShort + '</div></div>' +
+        '<span class="cmp-more">What really happened? Click to find out</span></li>';
     }).join('');
     var bars = surv.map(function (p) {
       return '<div class="barcard"><h4>' + p.title + '</h4><p class="sub">' + p.sub + '</p>' +
@@ -2089,12 +1797,12 @@ var ART = (function () {
       '<ul class="verdicts"><li><b>People</b>' + v.people + '</li><li><b>Peace</b>' + v.peace + '</li><li><b>Profit</b>' + v.profit + '</li></ul>' +
       (bars ? '<h3 class="section">How many people lived</h3><div class="bars">' + bars + '</div><p class="barnote">Each bar shows the share of people who lived. A longer bar is better.</p>' : '') +
       '<h3 class="section">Your choices next to theirs</h3>' +
+      '<p class="fine">Click any decision to see what really happened. Watch for decision 9: it led to the Starving Time.</p>' +
       '<ul class="tallies">' +
       '<li><span class="sym same" aria-hidden="true">=</span>' + t.same + ' the same</li>' +
       '<li><span class="sym part" aria-hidden="true">≈</span>' + t.part + ' partly the same</li>' +
       '<li><span class="sym diff" aria-hidden="true">≠</span>' + t.diff + ' different</li></ul>' +
       '<ul class="cmp-list">' + cards + '</ul>' +
-      (s.clip && s.clip.length ? '<h3 class="section">My notes on <i>The New World</i> clip</h3><ul class="clipnotes">' + s.clip.map(function (n) { return '<li><b>' + n[0] + '</b>' + esc(n[1]) + '</li>'; }).join('') + '</ul>' : '') +
       '<h3 class="section">Think it over</h3>' +
       '<ol class="think">' +
       '<li>Which of your decisions helped the colony most? What was its opportunity cost?</li>' +
@@ -2117,6 +1825,11 @@ var ART = (function () {
       '<div class="row noprint"><button class="go" id="copy" type="button">Copy my report</button><button class="go quiet" id="again" type="button">Play again</button><span class="copied" id="copied" role="status"></span></div>' +
       '<div id="copyfallback"></div>';
     show(html);
+    stage.querySelectorAll('[data-real]').forEach(function (li) {
+      var go = function () { openModal(realHtml(+li.getAttribute('data-real')), li); };
+      li.addEventListener('click', go);
+      li.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); go(); } });
+    });
     $('again').addEventListener('click', showTitle);
     $('copy').addEventListener('click', function () {
       var text = VV.reportText(s);
