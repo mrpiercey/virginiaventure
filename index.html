@@ -139,6 +139,8 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .chips li.dead{background:var(--edu-midnight);color:var(--edu-white)}
 .real{border-top:2px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:6px}
 .real h3{font-size:22px;color:var(--edu-pacific)}
+.over{background:var(--edu-midnight);color:var(--edu-white);border-radius:16px;padding:14px 20px}
+.over b{display:block;font-family:var(--font-slab);font-weight:700;font-size:22px}
 .word{background:var(--tint-purple);border-radius:14px;padding:10px 16px;font-size:15px}
 .go{align-self:flex-start;font-weight:700;font-size:18px;line-height:1.2;border-radius:99px;padding:13px 34px;background:var(--edu-orange);color:var(--edu-white);border:2.5px solid var(--edu-orange);transition:transform .12s,box-shadow .12s,background .12s,color .12s}
 .go:hover{background:#E64400;border-color:#E64400;transform:translateY(-2px);box-shadow:var(--shadow-pop)}
@@ -480,7 +482,7 @@ var VV = (function () {
         {
           key: 'a', label: 'Keep drinking the water we have',
           detail: 'There is no time to dig. The men are needed elsewhere.',
-          fx: function (s) { return { health: s.site === 'bluff' ? -12 : -25 }; },
+          fx: function (s) { return { health: s.site === 'bluff' ? -12 : -30 }; },
           result: function () { return 'The men keep drinking the bad water. Fevers and stomach sickness spread through the camp. Soon there are barely enough healthy men to stand guard.'; },
           gaveUp: 'your men’s health, to save a few days of digging.'
         },
@@ -538,7 +540,7 @@ var VV = (function () {
         {
           key: 'c', label: 'Wait for the supply ship',
           detail: 'Captain Newport promised to come back.',
-          fx: function () { return { food: -15, health: -10, trust: 5 }; },
+          fx: function () { return { food: -15, health: -15, trust: 5 }; },
           result: function () { return 'You wait. And wait. The ship does not come until January. Some Powhatan people bring gifts of corn and deer meat, and that saves lives. Still, your men are skin and bones.'; },
           gaveUp: 'weeks when you could have been trading.'
         }
@@ -841,14 +843,20 @@ var VV = (function () {
     });
     var deaths = Math.min(s.settlers, (c.extra || 0) + Math.round(s.settlers * seasonRate(s, round.weight)));
     s.settlers -= deaths;
+    /* The simulation ends when nobody is left. An empty storehouse or a colony with no
+       health left kills everyone who remains. After 1610, supply ships keep food from hitting bottom. */
+    var cause = null;
+    if (s.food <= 0 && s.i < 9) cause = 'food';
+    else if (s.health <= 0) cause = 'health';
+    else if (s.settlers <= 0) cause = 'dead';
+    if (cause) { deaths += s.settlers; s.settlers = 0; s.lost = cause; if (s.i < 5) s.firstYear = 0; }
     var entry = { round: s.i, key: key, label: c.label, deaths: deaths, deltas: deltas, text: c.result(s), gaveUp: c.gaveUp };
     s.log.push(entry);
-    if (s.settlers < 20 && s.i < 8) s.lost = 'early';
     return entry;
   }
 
   function winterRate(s) {
-    return clamp(1.25 - 0.009 * s.food - 0.004 * s.trust - (s.fields ? 0.08 : 0), 0.06, 0.92);
+    return clamp(1.25 - 0.009 * s.food - 0.004 * s.trust - (s.fields ? 0.08 : 0), 0.06, 1);
   }
 
   function runWinter(s) {
@@ -858,12 +866,16 @@ var VV = (function () {
     s.settlers -= deaths;
     s.food = clamp(s.food - 20, 0, 100);
     s.winter = { before: before, after: s.settlers, deaths: deaths, rate: rate };
-    if (s.settlers < 25) s.lost = 'winter';
+    if (s.settlers <= 0) s.lost = 'winter';
     return s.winter;
   }
 
   function verdicts(s) {
     var n = s.winter ? s.winter.after : s.settlers;
+    if (s.lost) return { n: 0,
+      people: 'None of your settlers lived. In the real colony, about 60 people held on.',
+      peace: 'The Powhatan are still here. This is their country, as it was before your ships came.',
+      profit: 'The Company has lost every person and every coin it sent.' };
     var people = n >= 300 ? 'Most of your people lived. Very few leaders in early Virginia could say that.'
       : n >= 150 ? 'You lost many people, but far fewer than the real colony did.'
       : n >= 61 ? 'It was close. A little more went right for you than for the real colony.'
@@ -878,8 +890,7 @@ var VV = (function () {
   }
 
   function headline(s) {
-    if (s.lost === 'early') return 'The colony is lost';
-    if (s.lost === 'winter') return 'Jamestown is abandoned';
+    if (s.lost) return 'Your colony did not survive';
     var n = s.winter.after;
     if (n >= 300) return 'Your colony is growing strong';
     if (n >= 150) return 'Your colony made it';
@@ -892,6 +903,7 @@ var VV = (function () {
     lines.push('THE VIRGINIA VENTURE: Report to the Virginia Company');
     if (s.name) lines.push('Leader: ' + s.name);
     lines.push(headline(s));
+    if (s.lost) lines.push('Every settler died. The simulation ended at decision ' + s.log.length + ' of 10.');
     lines.push('Settlers alive: ' + s.settlers + ' of ' + s.sent + ' sent. (Real Jamestown, spring 1610: about 60 of about 500.)');
     lines.push('Food ' + s.food + ', Health ' + s.health + ', Trust ' + s.trust + ', Company ' + s.company + ' (each out of 100)');
     lines.push('');
@@ -1468,6 +1480,11 @@ var ART = (function () {
         land(132, 8, C.dry) + tufts(15, 150, 332, 30, C.tan) + bare(56, 300, 1.6) + tree(744, 300, 1.4, C.tan) + tree(700, 270, 1, C.corn) +
         fort(400, 250, 1.3) + crowd(51, 120, 690, 286, 328, 26, { hat: true });
     },
+    empty: function () {
+      return sky(C.gray, 84) + farShore(76, 44, C.tanL) + river(88, 130, 45) +
+        land(132, 8, C.dry) + tufts(15, 150, 332, 30, C.tan) + bare(56, 300, 1.6) + bare(150, 262, 1.1) + bare(744, 300, 1.5) +
+        fort(400, 258, 1.35) + stump(250, 318) + stump(600, 312);
+    },
     winter: function () {
       return sky(C.gray, 84) + farShore(76, 52, '#D9F5F3') + river(88, 130, 53, C.sky) +
         land(132, 8, C.snow) + bare(70, 300, 1.7) + bare(150, 250, 1.1) + pine(730, 300, 1.7, true) + pine(676, 262, 1.1, true) +
@@ -1619,6 +1636,7 @@ var ART = (function () {
       '<p>Three small ships have just crossed the Atlantic Ocean. A business in London called the Virginia Company paid for the trip. The Company wants gold, a shortcut to Asia, and anything else it can sell.</p>' +
       '<p>This land is not empty. About 15,000 Powhatan people live here, in about 30 tribes. Their leader is Wahunsenacawh, and they call their country Tsenacommacah.</p>' +
       '<p>The council has picked you to lead. You will make ten decisions. Before each one you can check the charter and ask for advice. After each one you will find out what the real settlers did.</p>' +
+      '<p>Keep an eye on Food and Health. If either one runs out, or if nobody is left alive, the simulation ends.</p>' +
       '</div>' +
       '<ul class="howto">' +
       '<li data-k="food"><b>Food</b>How full the storehouse is.</li>' +
@@ -1684,14 +1702,24 @@ var ART = (function () {
     return '<ul class="chips">' + out.join('') + '</ul>';
   }
 
+  var OVER = {
+    food: 'The storehouse is completely empty, and the last of your settlers starve.',
+    health: 'Sickness has reached every person in the fort, and no one is well enough to care for the rest.',
+    dead: 'The last of your settlers has died.',
+    winter: 'The food ran out long before spring, and no one in the fort lived through the winter.'
+  };
+  function overBox() {
+    return '<div class="over"><b>No one is left alive.</b><p>' + OVER[s.lost] + ' The simulation ends here.</p></div>';
+  }
+
   function showResult(e) {
     var r = VV.ROUNDS[e.round];
     renderStatus();
-    var nextLabel = s.lost ? 'See what happened' : e.round === 8 ? 'Face the winter' : e.round === 9 ? 'Read your report' : 'Next decision';
+    var nextLabel = s.lost ? 'See your report' : e.round === 8 ? 'Face the winter' : e.round === 9 ? 'Read your report' : 'Next decision';
     show(
       '<div class="result">' +
       '<h2 class="round-title">You chose: ' + e.label + '</h2>' +
-      '<p>' + e.text + '</p>' + chips(e) +
+      '<p>' + e.text + '</p>' + chips(e) + (s.lost ? overBox() : '') +
       '<p class="gave"><b>What you gave up:</b> ' + e.gaveUp + '</p>' +
       '<div class="real"><h3>What really happened</h3><p>' + r.reality + '</p>' +
       (r.sources.length ? '<div class="evidence"><b>See the real evidence:</b>' + srcButtons(r.sources) + '</div>' : '') + '</div>' +
@@ -1711,7 +1739,9 @@ var ART = (function () {
   function showWinter() {
     var w = VV.runWinter(s);
     renderStatus(); setWhen('Winter 1609 to 1610'); setArt('winter', 'The fort in the winter of 1609 to 1610.');
-    var story = w.rate >= 0.6
+    var story = s.lost
+      ? 'The food is gone before the first snow melts, and no town will trade with you. One by one, the settlers die. When spring comes, the fort is silent.'
+      : w.rate >= 0.6
       ? 'It is the worst winter the colony has ever known. The food runs out. People eat the horses, then the dogs and cats, then rats, and at last their own leather shoes. By spring, the fort is nearly silent.'
       : w.rate >= 0.25
         ? 'It is a long, hungry winter. The food you stored runs low by February. Many people do not live to see the spring, but the colony holds together.'
@@ -1720,9 +1750,9 @@ var ART = (function () {
       '<div class="result">' +
       '<h2 class="round-title">The winter of 1609 to 1610</h2>' +
       '<p>' + story + '</p>' +
-      '<div class="bignum"><div><b>' + w.before + '</b><span>people in the fall</span></div><div><b>' + w.after + '</b><span>alive in the spring</span></div></div>' +
+      '<div class="bignum"><div><b>' + w.before + '</b><span>people in the fall</span></div><div><b>' + w.after + '</b><span>alive in the spring</span></div></div>' + (s.lost ? overBox() : '') +
       '<div class="real"><h3>What really happened</h3><p>About 500 people went into that winter. About 60 came out. The settlers called it the Starving Time. In June 1610 the survivors gave up, boarded their ships, and sailed away. Before they reached the ocean, they met a fleet coming in with new settlers and a year of supplies. They turned around.</p></div>' +
-      '<button class="go" id="next" type="button">' + (s.lost ? 'See what happened' : 'Keep going') + '</button>' +
+      '<button class="go" id="next" type="button">' + (s.lost ? 'See your report' : 'Keep going') + '</button>' +
       '</div>');
     $('next').addEventListener('click', function () {
       if (s.lost) return showReport();
@@ -1742,12 +1772,10 @@ var ART = (function () {
     var v = VV.verdicts(s), head = VV.headline(s), lost = !!s.lost, t = VV.tally(s), surv = VV.survival(s);
     document.body.classList.add('is-report');
     setWhen(lost ? 'The end' : 'Looking back');
-    setArt(lost ? 'winter' : 'spring', lost ? 'An empty fort.' : 'The fort, with ships coming up the river.');
-    var why = s.lost === 'early'
-      ? 'With fewer than 20 people left, there is nobody to guard the walls or work the fields. The last settlers squeeze into a boat and head for the open sea. Years from now, people will call this another lost colony.'
-      : s.lost === 'winter'
-        ? 'Too few people lived through the winter to keep the fort going. The survivors board a ship for England. This time, no fleet arrives to turn them around.'
-        : '';
+    setArt(lost ? (s.lost === 'winter' ? 'winter' : 'empty') : 'spring', lost ? 'An empty fort.' : 'The fort, with ships coming up the river.');
+    var why = lost
+      ? OVER[s.lost] + ' The simulation ended at decision ' + s.log.length + ' of 10. When the next ship from England arrives, it will find an empty fort. People will call it another lost colony, like Roanoke.'
+      : '';
     var cards = s.log.map(function (e) {
       var r = VV.ROUNDS[e.round], k = VV.matchKind(e.round, e.key);
       return '<li class="cmp ' + k + '"><div class="cmp-head"><b>' + (e.round + 1) + '. ' + r.title + '</b><span>' + SYM_WORDS[k] + '</span></div>' +

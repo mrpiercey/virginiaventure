@@ -14,6 +14,7 @@ Open `index.html` in any web browser. There is nothing to install and no login.
 
 - A full game takes about 15 to 20 minutes.
 - The same choices always give the same result, so students can compare and talk about why.
+- The simulation ends early if every settler dies. That happens when Food or Health runs all the way out, or when nobody lives through the winter of 1609 to 1610. About 6 in every 100 possible games end this way.
 - To print a report, use the browser's own print command (Ctrl+P or Command+P) on the last screen.
 
 ## What students practice
