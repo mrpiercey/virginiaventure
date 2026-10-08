@@ -1,4 +1,4 @@
-# Jamestown: Survive the Colony
+# Jamestown: Conflicts, Cooperation, and Costs (1607–1612)
 
 A decision game about the first years of Jamestown, 1607 to 1612, for 5th grade social studies.
 

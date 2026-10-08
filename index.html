@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jamestown: Survive the Colony</title>
+<title>Jamestown: Conflicts, Cooperation, and Costs (1607–1612)</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Zilla+Slab:wght@600;700&display=swap">
 <style>
 /* ============================================================
-   JAMESTOWN: SURVIVE THE COLONY · EDUTOPIA DESIGN SYSTEM
+   JAMESTOWN: CONFLICTS, COOPERATION, AND COSTS (1607–1612) · EDUTOPIA DESIGN SYSTEM
    Same look as Class Jobs Maker and "Authentic or AI?": cream
    background, flat corner circles, slab headlines in Pacific
    Blue, pill buttons, white cards with soft shadows, and the
@@ -115,6 +115,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .round-title{font-size:clamp(30px,4.4vw,42px)}
 .hero{font-size:clamp(46px,9vw,88px);line-height:1.02;color:var(--edu-pacific)}
 .hero .hl{color:var(--edu-orange)}
+.hero .hero-yrs{display:block;font-size:.45em;margin-top:.2em}
 .lede{font-size:clamp(18px,2.2vw,22px);line-height:1.5;color:var(--edu-dark-grey);max-width:44rem}
 .prose{display:flex;flex-direction:column;gap:10px;max-width:42rem}
 .news{background:var(--tint-sun);border-radius:16px;padding:14px 20px}
@@ -327,7 +328,7 @@ body.is-report .left{position:static;display:grid;grid-template-columns:minmax(0
 </head>
 <body>
 <header class="appbar"><div class="in">
-  <span class="name">Jamestown: Survive the Colony</span>
+  <span class="name">Jamestown: Conflicts, Cooperation, and Costs (1607–1612)</span>
   <span class="bar-r"><button class="sound" id="sound" type="button" aria-pressed="true">Sound on</button><span class="when" id="when">Spring 1607</span></span>
 </div></header>
 <div class="wrap">
@@ -350,7 +351,7 @@ body.is-report .left{position:static;display:grid;grid-template-columns:minmax(0
   </div>
 </div>
 <script>
-/* Jamestown: Survive the Colony: rules and story. No page code in this part. */
+/* Jamestown: Conflicts, Cooperation, and Costs (1607–1612): rules and story. No page code in this part. */
 var VV = (function () {
   'use strict';
 
@@ -958,7 +959,7 @@ var VV = (function () {
 
   function reportText(s) {
     var v = verdicts(s), lines = [];
-    lines.push('JAMESTOWN: SURVIVE THE COLONY — Report to the Virginia Company');
+    lines.push('JAMESTOWN: CONFLICTS, COOPERATION, AND COSTS (1607–1612) — Report to the Virginia Company');
     if (s.name) lines.push('Leader: ' + s.name);
     lines.push(headline(s));
     if (s.lost) lines.push('Every settler died. The simulation ended at decision ' + s.log.length + ' of 10.');
@@ -983,7 +984,7 @@ var VV = (function () {
     headline: headline, reportText: reportText, companyBonus: companyBonus };
 })();
 
-/* Jamestown: Survive the Colony: the real evidence. Every quote below was copied from the page it links to. */
+/* Jamestown: Conflicts, Cooperation, and Costs (1607–1612): the real evidence. Every quote below was copied from the page it links to. */
 (function () {
   'use strict';
 
@@ -1262,7 +1263,7 @@ var VV = (function () {
   };
 })();
 
-/* Jamestown: Survive the Colony: the true story students read before the simulation starts.
+/* Jamestown: Conflicts, Cooperation, and Costs (1607–1612): the true story students read before the simulation starts.
    It ends on the day the English sail into the river, which is where decision 1 begins.
    About 700 words. Pictures are public domain. */
 (function () {
@@ -1360,7 +1361,7 @@ var VV = (function () {
   ];
 })();
 
-/* Jamestown: Survive the Colony: the page itself. */
+/* Jamestown: Conflicts, Cooperation, and Costs (1607–1612): the page itself. */
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
@@ -1532,7 +1533,7 @@ var VV = (function () {
     show(
       '<div class="welcome">' +
       '<span class="kicker">A Jamestown decision game</span>' +
-      '<h1 class="hero">Jamestown: <span class="hl">Survive the Colony</span></h1>' +
+      '<h1 class="hero">Jamestown: <span class="hl">Conflicts, Cooperation, and Costs</span> <span class="hero-yrs">(1607–1612)</span></h1>' +
       '<p class="lede">In 1607, 104 English men and boys came to build a colony in a land that already belonged to someone else. Soon you will lead them. Can you keep them alive?</p>' +
       '<div class="prose"><p>First, read the true story of how they got here. It has six short chapters and takes about 4 minutes. Watch for names. You will meet some of these people again. Then you will watch the ships arrive in a short movie clip.</p></div>' +
       '<div class="row"><button class="go" id="story" type="button">Start the story</button>' +
