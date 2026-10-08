@@ -1,4 +1,4 @@
-# The Virginia Venture
+# Jamestown: Survive the Colony
 
 A decision game about the first years of Jamestown, 1607 to 1612, for 5th grade social studies.
 
