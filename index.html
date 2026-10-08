@@ -8,29 +8,31 @@
 <style>
 /* ============================================================
    JAMESTOWN: CONFLICTS, COOPERATION, AND COSTS (1607–1612) · EDUTOPIA DESIGN SYSTEM
-   Same look as Class Jobs Maker and "Authentic or AI?": cream
-   background, flat corner circles, slab headlines in Pacific
-   Blue, pill buttons, white cards with soft shadows, and the
-   palette ribbon under the top bar. Electric Orange stays rare:
+   Same layout as Class Jobs Maker and "Authentic or AI?", recolored
+   to look like an old colonial map: parchment background, slab
+   headlines in sea blue, a charcoal top bar with gold trim, and
+   light parchment cards. Deep red stays rare:
    one word in the title and one main button per screen.
    Layout: two panels that fill the page. Picture and colony numbers
    on the left, the story and choices on the right. One column on phones.
    ============================================================ */
 :root{
   color-scheme: light;
-  /* Edutopia palette */
-  --edu-orange:#FF4C00; --edu-dark-orange:#FF780D; --edu-tangerine:#FF9B0D; --edu-sunshine:#FFBC0D;
-  --edu-midnight:#1D2A44; --edu-space:#004861; --edu-pacific:#0094C7; --edu-tech:#4FD2FF;
-  --edu-purple:#532681; --edu-light-purple:#A973DF; --edu-pink:#E75CAE; --edu-salmon:#F27179;
-  --edu-teal:#00AFAB; --edu-light-teal:#2AD2C9; --edu-green:#6FB300; --edu-light-green:#BDF22E;
-  --edu-dark-grey:#333333; --edu-light-grey:#666666; --edu-cream:#FFF7ED; --edu-white:#FFFFFF;
+  /* Colonial map palette: parchment, charcoal, old gold, sea blue, deep red.
+     The token names stay the same so every part of the page picks up the new colors. */
+  --edu-orange:#9E1B1B; --edu-dark-orange:#B3412A; --edu-tangerine:#C29A45; --edu-sunshine:#D8B661;
+  --edu-midnight:#2B2824; --edu-space:#2F5568; --edu-pacific:#3E6F88; --edu-tech:#8DB3C4;
+  --edu-purple:#6B4A2E; --edu-light-purple:#A98457; --edu-pink:#8E3B2E; --edu-salmon:#C46A55;
+  --edu-teal:#5F7A3A; --edu-light-teal:#9FAE6E; --edu-green:#5E7F2E; --edu-light-green:#C3CB86;
+  --edu-dark-grey:#3A342C; --edu-light-grey:#665C4E; --edu-cream:#EDE2C2; --edu-white:#FBF6E7;
+  --edu-charcoal:#2E2D2B; --edu-gold:#C29A45; --edu-parchment-text:#F2E7C4;
   /* soft tints of the palette, for backgrounds behind dark text */
-  --tint-blue:#DFF5FD; --tint-teal:#D9F5F3; --tint-purple:#EEE3F9; --tint-sun:#FFEFC2; --tint-pink:#FBE0EF; --tint-green:#EEF9CB;
-  --line:#E9E1D3; --track:#EDE6DA; --warn:#B3310C;
+  --tint-blue:#D3E1E4; --tint-teal:#E0E2C3; --tint-purple:#E9DBC4; --tint-sun:#F0DDA4; --tint-pink:#EBD2C6; --tint-green:#E1E5BE;
+  --line:#D6C69B; --track:#DCCFAB; --warn:#8E1A1A;
   --font-ui:'Poppins',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
   --font-slab:'Museo Slab','Zilla Slab',Rockwell,Georgia,serif;
-  --shadow-card:0 4px 20px rgba(29,42,68,.12);
-  --shadow-pop:0 10px 40px rgba(29,42,68,.22);
+  --shadow-card:0 4px 20px rgba(46,36,22,.12);
+  --shadow-pop:0 10px 40px rgba(46,36,22,.22);
   --radius:18px;
   --r1:min(15vw,210px); --r2:min(11vw,150px); --r3:min(17vw,240px);
   --page-w:1560px; --gutter:clamp(16px,2.6vw,40px);
@@ -59,12 +61,12 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 [tabindex="-1"]:focus{outline:none}
 
 /* ---------- Top bar ---------- */
-.appbar{position:relative;background:var(--edu-white);box-shadow:0 2px 12px rgba(29,42,68,.10);margin-bottom:6px}
+.appbar{position:relative;background:var(--edu-charcoal);color:var(--edu-parchment-text);box-shadow:0 2px 12px rgba(46,36,22,.10);margin-bottom:6px}
 .appbar::after{content:"";position:absolute;left:0;right:0;top:100%;height:6px;
-  background:linear-gradient(90deg,var(--edu-pink) 0 14.3%,var(--edu-light-purple) 0 28.6%,var(--edu-pacific) 0 42.9%,var(--edu-light-teal) 0 57.2%,var(--edu-green) 0 71.5%,var(--edu-sunshine) 0 85.8%,var(--edu-tangerine) 0)}
+  background:linear-gradient(var(--edu-gold) 0 4px,var(--edu-orange) 0)}
 .appbar .in{max-width:var(--page-w);margin-inline:auto;padding-inline:var(--gutter);padding-block:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 16px}
-.appbar .name{font-family:var(--font-slab);font-weight:700;font-size:22px;line-height:1.1}
-.appbar .when{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--tint-blue);border-radius:99px;padding:5px 14px;white-space:nowrap}
+.appbar .name{color:var(--edu-parchment-text);font-family:var(--font-slab);font-weight:700;font-size:22px;line-height:1.1}
+.appbar .when{color:var(--edu-midnight);font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--tint-blue);border-radius:99px;padding:5px 14px;white-space:nowrap}
 
 .wrap{max-width:var(--page-w);margin-inline:auto;padding-inline:var(--gutter);padding-block:24px 56px;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:clamp(18px,2.4vw,36px);align-items:start}
 .left{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 16px);display:flex;flex-direction:column;gap:16px;min-width:0}
@@ -157,7 +159,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .over b{display:block;font-family:var(--font-slab);font-weight:700;font-size:22px}
 .word{background:var(--tint-purple);border-radius:14px;padding:10px 16px;font-size:15px}
 .go{align-self:flex-start;font-weight:700;font-size:18px;line-height:1.2;border-radius:99px;padding:13px 34px;background:var(--edu-orange);color:var(--edu-white);border:2.5px solid var(--edu-orange);transition:transform .12s,box-shadow .12s,background .12s,color .12s}
-.go:hover{background:#E64400;border-color:#E64400;transform:translateY(-2px);box-shadow:var(--shadow-pop)}
+.go:hover{background:#7F1414;border-color:#7F1414;transform:translateY(-2px);box-shadow:var(--shadow-pop)}
 .go:active{transform:none}
 .go.quiet{background:var(--edu-white);color:var(--edu-midnight);border-color:var(--edu-midnight);font-size:15px;padding:11px 24px}
 .go.quiet:hover{background:var(--edu-midnight);color:var(--edu-white);border-color:var(--edu-midnight)}
@@ -255,7 +257,7 @@ body.is-report .left{position:static;display:grid;grid-template-columns:minmax(0
 .library h4{font-family:var(--font-ui);font-size:14px;font-weight:700;margin:0 0 6px;color:var(--edu-dark-grey)}
 
 /* ---------- Pop-up ---------- */
-.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:calc(env(safe-area-inset-top, 0px) + 16px) 16px calc(env(safe-area-inset-bottom, 0px) + 16px);background:rgba(29,42,68,.62)}
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:calc(env(safe-area-inset-top, 0px) + 16px) 16px calc(env(safe-area-inset-bottom, 0px) + 16px);background:rgba(46,36,22,.62)}
 .sheet{position:relative;width:min(100%,54rem);max-height:100%;overflow-y:auto;background:var(--edu-white);border-radius:22px;box-shadow:var(--shadow-pop);padding:26px clamp(18px,3vw,34px) 28px}
 .sheet:focus{outline:none}
 .sheet .x{position:sticky;top:0;display:block;margin:-6px -6px -34px auto;font-weight:700;font-size:14px;background:var(--edu-white);border:2.5px solid var(--edu-midnight);border-radius:99px;padding:6px 16px;z-index:2}
