@@ -34,26 +34,13 @@
   --shadow-card:0 4px 20px rgba(46,36,22,.12);
   --shadow-pop:0 10px 40px rgba(46,36,22,.22);
   --radius:18px;
-  --r1:min(15vw,210px); --r2:min(11vw,150px); --r3:min(17vw,240px);
   --page-w:1560px; --gutter:clamp(16px,2.6vw,40px);
   --you:var(--edu-pacific); --real:var(--edu-salmon); /* chart colors: checked for color-blind safety */
 }
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;min-height:100vh;font-family:var(--font-ui);font-size:17px;line-height:1.6;color:var(--edu-midnight);-webkit-font-smoothing:antialiased;
-  background:
-    radial-gradient(circle at 100% 0,var(--tint-blue) 0 var(--r1),transparent calc(var(--r1) + 1.5px)),
-    radial-gradient(circle at 0 100%,var(--tint-sun) 0 var(--r3),transparent calc(var(--r3) + 1.5px)),
-    radial-gradient(circle at 100% 100%,var(--tint-teal) 0 var(--r2),transparent calc(var(--r2) + 1.5px)),
-    var(--edu-cream);
-  background-attachment:fixed}
-body.is-welcome{background:
-    radial-gradient(circle at 0 0,var(--edu-sunshine) 0 var(--r1),transparent calc(var(--r1) + 1.5px)),
-    radial-gradient(circle at 100% 14%,var(--edu-tech) 0 var(--r2),transparent calc(var(--r2) + 1.5px)),
-    radial-gradient(circle at 3% 100%,var(--edu-light-teal) 0 var(--r2),transparent calc(var(--r2) + 1.5px)),
-    radial-gradient(circle at 100% 100%,var(--edu-tangerine) 0 var(--r3),transparent calc(var(--r3) + 1.5px)),
-    var(--edu-cream);
-  background-attachment:fixed}
+  background:var(--edu-cream)}
 h1,h2,h3{font-family:var(--font-slab);font-weight:700;line-height:1.08;margin:0;text-wrap:balance;color:var(--edu-midnight)}
 p{margin:0}
 button{font-family:inherit;color:inherit;cursor:pointer}
