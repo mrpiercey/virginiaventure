@@ -1,18 +1,29 @@
 {
-  "hosting": {
-    "public": ".",
-    "ignore": [
-      "firebase.json",
-      ".firebaserc",
-      "README.md",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "headers": [
-      {
-        "source": "**/*.@(jpg|jpeg|png)",
-        "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
-      }
-    ]
-  }
+  "hosting": [
+    {
+      "site": "jamestown1607",
+      "public": ".",
+      "ignore": [
+        "firebase.json",
+        ".firebaserc",
+        "README.md",
+        "old-link/**",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(jpg|jpeg|png)",
+          "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
+        }
+      ]
+    },
+    {
+      "site": "virginiaventure",
+      "public": "old-link",
+      "redirects": [
+        { "source": "/:path*", "destination": "https://jamestown1607.web.app/:path*", "type": 301 }
+      ]
+    }
+  ]
 }

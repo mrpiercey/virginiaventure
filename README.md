@@ -41,16 +41,11 @@ The game follows the Edutopia brand guidelines and shares its design system with
 
 - **Fonts.** Poppins stands in for Gotham and is used for all interface text. Zilla Slab stands in for Museo Slab in headlines.
 - **Colors.** The page and every picture are built only from the Edutopia palette and soft tints of it. The palette is listed as CSS variables at the top of `index.html`.
-- **Electric Orange (#FF4C00)** is used sparingly: one word in the title and one main button per screen.
+- **Colors** look like an old colonial map: parchment, charcoal, gold, sea blue, and deep red. Deep red (#9E1B1B) is used sparingly: the title words and one main button per screen.
 - **Logo.** The Edutopia "edu" bug is not included. Add it only if Edutopia is publishing the game.
 
-## Put it online with GitHub Desktop
+## Where it lives
 
-1. Open GitHub Desktop.
-2. Choose **File**, then **Add Local Repository**, and pick this `virginiaventure` folder.
-3. GitHub Desktop will say the folder is not a repository yet. Click **create a repository**, then **Create Repository**.
-4. Click **Publish repository**. Uncheck **Keep this code private**, then click **Publish Repository**.
-5. On github.com, open the new repository. Go to **Settings**, then **Pages**. Under **Branch**, choose **main** and **/ (root)**, then click **Save**.
-6. Wait about a minute. The game will be live at `https://YOUR-USERNAME.github.io/virginiaventure/`.
+Students play it at **https://jamestown1607.web.app** (Firebase Hosting, project `virginiaventure`). The old link, virginiaventure.web.app, sends people to the new one, so old links still work. GitHub only stores the code.
 
-To update it later: replace `index.html` (and keep the `sources` folder beside it), then in GitHub Desktop click **Commit to main** and **Push origin**.
+To update it: commit and push to GitHub, then run `firebase deploy --only hosting` from this folder. That updates both sites.
